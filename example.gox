@@ -1,0 +1,29 @@
+{
+  "name": "UserServer",
+  "port": "8080",
+  "docker": "golang:latest",
+  "databases": [
+    {
+      "driver": "postgres",
+      "dbname": "userdb",
+      "user": "postgres",
+      "password": "",
+      "port": {
+        "port": "5437",
+        "link": "5432"
+      },
+      "host": {
+        "port": "localhost",
+        "link": "postgres5437"
+      },
+      "docker": "postgres:latest"
+    }
+  ],
+  "clients": {
+    "LogServer": "http://172.17.0.1:8091"
+  }
+}
+
+
+
+

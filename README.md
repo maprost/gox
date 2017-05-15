@@ -1,0 +1,5 @@
+# GoX
+
+## Dependencies
+- docker
+- godep
