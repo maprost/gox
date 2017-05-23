@@ -1,4 +1,10 @@
-package goxcfg
+package gxcfg
+
+type DBDocker struct {
+	Image     string
+	Container string
+	DiscSpace string
+}
 
 type Database struct {
 	driver   string
@@ -7,7 +13,7 @@ type Database struct {
 	password string
 	host     string
 	port     string
-	Docker   string
+	Docker   DBDocker
 }
 
 func (d Database) Driver() string {
@@ -34,13 +40,24 @@ func (d Database) Password() string {
 	return d.password
 }
 
+type CfgDocker struct {
+	Image     string
+	Container string
+
+	// Important for building the docker image
+	// Insert public content, like website templates or image path.
+	Volumes []string
+}
+
 type Config struct {
-	Name         string
-	Port         string
-	RelativeRoot string
-	Database     []Database
-	Docker       string
-	ClientUrl    map[string]string
+	Name            string
+	Port            string
+	FullProjectPath string // -> /home/maprost/go/src/github.com/maprost/gox
+	ProjectPath     string // -> src/github.com/maprost/gox
+	CmdPath         string // -> src/github.com/maprost/gox/cmd/gox-build
+	Database        []Database
+	Docker          CfgDocker
+	Clients         map[string]string
 }
 
 var singleton *Config = nil

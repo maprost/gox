@@ -1,7 +1,13 @@
 {
   "name": "UserServer",
   "port": "8080",
-  "docker": "golang:latest",
+  "docker": {
+    "container": "user-server",
+    "image": "golang:latest",
+    "volume": [
+      "core/public/"
+    ]
+  },
   "databases": [
     {
       "driver": "postgres",
@@ -16,7 +22,11 @@
         "port": "localhost",
         "link": "postgres5437"
       },
-      "docker": "postgres:latest"
+      "docker": {
+        "container": "postgres5437",
+        "image": "postgres:latest",
+        "discspace": "~/workspace/database/postgres5437"
+      }
     }
   ],
   "clients": {
