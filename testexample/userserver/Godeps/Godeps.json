@@ -1,0 +1,61 @@
+{
+	"ImportPath": "github.com/maprost/gox/testexample/userserver",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Comment": "v1.3.0-5-g599cba5",
+			"Rev": "599cba5e7b6137d46ddf58fb1765f5d928e69604"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Comment": "go1.0-cutoff-166-g2704adc",
+			"Rev": "2704adc878c21e1329f46f6e56a1c387d788ff94"
+		},
+		{
+			"ImportPath": "github.com/lib/pq/oid",
+			"Comment": "go1.0-cutoff-166-g2704adc",
+			"Rev": "2704adc878c21e1329f46f6e56a1c387d788ff94"
+		},
+		{
+			"ImportPath": "github.com/maprost/gox/gxcfg",
+			"Rev": "352c92ae7b57f14a4458ce9566417d1684c5c03b"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx/pqarg",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx/pqdep",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx/pqnull",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx/pqtable",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx/pqtime",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx/pqtype",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		},
+		{
+			"ImportPath": "github.com/maprost/pqx/pqutil",
+			"Rev": "a7acd4716d0dabcf6078bfd780bc7fd7bdc7d4d8"
+		}
+	]
+}
