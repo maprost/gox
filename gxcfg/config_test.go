@@ -15,7 +15,7 @@ func TestProperties_checkFieldWithPortOption(t *testing.T) {
 	assert.NotNil(gxcfg.GetConfig())
 
 	// config
-	assert.Equal(gxcfg.GetConfig().Name, "UserServer")
+	assert.Equal(gxcfg.GetConfig().Name, "gxcfg")
 	assert.Equal(gxcfg.GetConfig().Port, "8080")
 	assert.True(strings.HasSuffix(gxcfg.GetConfig().FullProjectPath, "/src/github.com/maprost/gox"))
 	assert.Equal(gxcfg.GetConfig().ProjectPath, "src/github.com/maprost/gox")
@@ -48,7 +48,7 @@ func TestProperties_checkFieldWithLinkOption(t *testing.T) {
 	assert.NotNil(gxcfg.GetConfig())
 
 	// config
-	assert.Equal(gxcfg.GetConfig().Name, "UserServer")
+	assert.Equal(gxcfg.GetConfig().Name, "gxcfg")
 	assert.Equal(gxcfg.GetConfig().Port, "8080")
 	assert.True(strings.HasSuffix(gxcfg.GetConfig().FullProjectPath, "/src/github.com/maprost/gox"))
 	assert.Equal(gxcfg.GetConfig().ProjectPath, "src/github.com/maprost/gox")

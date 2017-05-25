@@ -31,7 +31,6 @@ type database struct {
 }
 
 type config struct {
-	Name      string
 	Port      string
 	Docker    godocker
 	Databases []database
@@ -43,13 +42,13 @@ func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {
 	var err error
 
 	var cfg config
+	// TODO: nur gox-init hat die suche, alle anderen müssen die config angeben
 	deep, err := searchConfig(file, 8, &cfg)
 	if err != nil {
 		return conf, err
 	}
 
 	// build config
-	conf.Name = cfg.Name
 	conf.Port = cfg.Port
 	conf.Clients = cfg.Clients
 	conf.Docker = CfgDocker{
@@ -72,6 +71,9 @@ func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {
 	if err != nil {
 		return conf, err
 	}
+
+	nameIndex := strings.LastIndex(conf.CmdPath, "/")
+	conf.Name = conf.CmdPath[nameIndex+1:]
 
 	// build database list
 	conf.Database = make([]Database, len(cfg.Databases))

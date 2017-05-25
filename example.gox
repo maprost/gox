@@ -1,5 +1,4 @@
 {
-  "name": "UserServer",
   "port": "8080",
   "docker": {
     "container": "user-server",

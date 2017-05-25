@@ -12,21 +12,24 @@ func GoDep() error {
 	return err
 }
 
-func Compile(cfgFile string) error {
+func Compile() error {
 	cfg := gxcfg.GetConfig()
 	docker := gxdocker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
 	// add project
 	docker.Value(cfg.FullProjectPath, "/go/"+cfg.ProjectPath)
+	docker.Execute("echo \"build\" && go build")
 
-	return nil
+	_, err := docker.Run()
+
+	return err
 }
 
 func Test() {
 
 }
 
-func BuildImage() {
+func BuildImage(cfgFile string) {
 
 }
 

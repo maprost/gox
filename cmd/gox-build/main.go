@@ -25,7 +25,7 @@ func main() {
 	}
 
 	// build (go build)
-	err = gxgo.Compile(cfgFile)
+	err = gxgo.Compile()
 	if err != nil {
 		log.Fatal("Can't comile: ", err.Error())
 	}
