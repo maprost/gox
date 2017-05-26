@@ -24,6 +24,12 @@ func main() {
 		log.Fatal("Can't run godep: ", err.Error())
 	}
 
+	// remove old container
+	err = gxgo.Remove()
+	if err != nil {
+		log.Fatal("Can't remove old container: ", err.Error())
+	}
+
 	// build (go build)
 	err = gxgo.Compile()
 	if err != nil {
