@@ -8,7 +8,7 @@ import (
 
 func main() {
 	var err error
-	cfgFile := "example.gox"
+	cfgFile := "config.gox"
 
 	// read parameter
 
