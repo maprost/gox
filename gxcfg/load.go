@@ -3,7 +3,6 @@ package gxcfg
 import (
 	"encoding/json"
 	"errors"
-	"github.com/maprost/gox/gxutil/gxlog"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -58,13 +57,6 @@ func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {
 		Container: cfg.Docker.Container,
 		Volumes:   cfg.Docker.Volume,
 	}
-
-	// select paths
-	path, err := getPath()
-	if err != nil {
-		return conf, err
-	}
-	gxlog.Info("Path: ", path)
 
 	conf.FullProjectPath, err = getFullProjectPath(deep)
 	if err != nil {
