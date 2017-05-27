@@ -1,9 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/maprost/gox/gxcfg"
+	"github.com/maprost/gox/gxutil/gxbash"
 	"github.com/maprost/gox/gxutil/gxgo"
+	"github.com/maprost/gox/gxutil/gxlog"
 	"log"
+	"os"
 )
 
 func main() {
@@ -18,11 +22,16 @@ func main() {
 		log.Fatal("Can't init config: ", err.Error())
 	}
 
+	fmt.Println(gxcfg.GetConfig())
+	gxbash.Stream(gxlog.LevelInfo, "ls", "-ahs")
+
+	fmt.Println(os.Getenv("GOPATH"))
+
 	// run godep
-	err = gxgo.GoDep()
-	if err != nil {
-		log.Fatal("Can't run godep: ", err.Error())
-	}
+	//err = gxgo.GoDep()
+	//if err != nil {
+	//	log.Fatal("Can't run godep: ", err.Error())
+	//}
 
 	// remove old container
 	err = gxgo.Remove()

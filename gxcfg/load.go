@@ -3,8 +3,10 @@ package gxcfg
 import (
 	"encoding/json"
 	"errors"
+	"github.com/maprost/gox/gxutil/gxlog"
 	"io/ioutil"
-	"runtime"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -56,6 +58,13 @@ func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {
 		Container: cfg.Docker.Container,
 		Volumes:   cfg.Docker.Volume,
 	}
+
+	// select paths
+	path, err := getPath()
+	if err != nil {
+		return conf, err
+	}
+	gxlog.Info("Path: ", path)
 
 	conf.FullProjectPath, err = getFullProjectPath(deep)
 	if err != nil {
@@ -166,15 +175,18 @@ func getCmdPath() (string, error) {
 }
 
 func getPath() (string, error) {
-	_, file, _, ok := runtime.Caller(1)
-	if !ok {
-		return "", errors.New("Can't get folder information.")
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		return "", errors.New("Can't get folder information. " + err.Error())
 	}
-
-	return trimLast(file, 1), nil
+	return dir, nil
 }
 
 func trimLast(path string, deep int) string {
+	if deep == 0 {
+		return path
+	}
+
 	index := strings.LastIndexFunc(path, func(c rune) bool {
 		if c == '/' {
 			deep--

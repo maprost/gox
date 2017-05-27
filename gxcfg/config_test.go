@@ -3,12 +3,16 @@ package gxcfg_test
 import (
 	"github.com/maprost/assertion"
 	"github.com/maprost/gox/gxcfg"
+	"os"
 	"strings"
 	"testing"
 )
 
 func TestProperties_checkFieldWithPortOption(t *testing.T) {
 	assert := assertion.New(t)
+
+	// fix path
+	os.Args[0] = "/home/maprost/go/src/github.com/maprost/gox/gxcfg/config_test.gp"
 
 	err := gxcfg.InitConfig("example.gox", gxcfg.DatabaseAccessPort)
 	assert.Nil(err)
@@ -17,9 +21,9 @@ func TestProperties_checkFieldWithPortOption(t *testing.T) {
 	// config
 	assert.Equal(gxcfg.GetConfig().Name, "gxcfg")
 	assert.Equal(gxcfg.GetConfig().Port, "8080")
-	assert.True(strings.HasSuffix(gxcfg.GetConfig().FullProjectPath, "/src/github.com/maprost/gox"))
 	assert.Equal(gxcfg.GetConfig().ProjectPath, "src/github.com/maprost/gox")
 	assert.Equal(gxcfg.GetConfig().CmdPath, "src/github.com/maprost/gox/gxcfg")
+	assert.Equal(gxcfg.GetConfig().FullProjectPath, "/home/maprost/go/src/github.com/maprost/gox")
 	assert.Equal(gxcfg.GetConfig().Docker.Image, "golang:latest")
 	assert.Equal(gxcfg.GetConfig().Docker.Container, "user-server")
 	assert.Equal(gxcfg.GetConfig().Clients, map[string]string{
@@ -42,6 +46,9 @@ func TestProperties_checkFieldWithPortOption(t *testing.T) {
 
 func TestProperties_checkFieldWithLinkOption(t *testing.T) {
 	assert := assertion.New(t)
+
+	// fix path
+	os.Args[0] = "/home/maprost/go/src/github.com/maprost/gox/gxcfg/config_test.gp"
 
 	err := gxcfg.InitConfig("example.gox", gxcfg.DatabaseAccessLink)
 	assert.Nil(err)

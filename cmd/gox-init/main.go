@@ -1,6 +1,6 @@
 package main
 
-import "github.com/maprost/gox/goxcfg"
+import "github.com/maprost/gox/gxcfg"
 
 func main() {
 
