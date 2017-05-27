@@ -18,7 +18,7 @@ func Compile() error {
 
 	// add project
 	docker.Value(cfg.FullProjectPath, "/go/"+cfg.ProjectPath)
-	docker.Execute("cd /go/" + cfg.CmdPath + " && echo \"build\" && go build")
+	docker.Execute("cd /go/" + cfg.CmdPath + " && echo \"build\" && go build -o "+cfg.Name+"_gx")
 
 	_, err := docker.Run()
 
