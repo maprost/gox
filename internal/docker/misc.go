@@ -15,7 +15,20 @@ func Pull(image string) error {
 
 func StopAndRemove(container string) error {
 	log.Info("Stopping: ", container)
-	_, err := shell.Command(log.LevelInfo, "docker", "rm", "-f", "-v", container)
+
+	// check if the container is there
+	id, err := shell.Stream(log.LevelDebug, "docker", "ps", "-a", "-q", "-f", "name="+container)
+	if err != nil {
+		return err
+	}
+
+	// if the contains not in use -> nothing to do
+	if len(id) == 0 {
+		return nil
+	}
+
+	// remove the container
+	_, err = shell.Command(log.LevelInfo, "docker", "rm", "-f", "-v", container)
 	return err
 }
 
@@ -62,7 +75,7 @@ func Execute(logLevel log.Level, container string, cmd string) (string, error) {
 //version_major, version_minor = get_version()
 //if version_major == None:
 //log.error("Docker is required in order to perform the build.")
-//log.error("Please go to https://docs.docker.com/installation/#installation for installation instructions.")
+//log.error("Please golang to https://docs.docker.com/installation/#installation for installation instructions.")
 //log.error(
 //"Do not install the version included in your distribution but be sure to get the latest version from docker.com.")
 //print("")

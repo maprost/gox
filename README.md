@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/maprost/gox?status.svg)](https://godoc.org/github.com/maprost/gox)
+
 # GoX (0.1 alpha)
 
 GoX is a go tool, to build and run your go server application in a docker container.

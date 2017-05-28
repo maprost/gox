@@ -61,7 +61,7 @@ func (d *RunBuilder) Run() (string, error) {
 	cmd = append(cmd, d.image)
 	cmd = append(cmd, d.args...)
 
-	return cmd.Stream(log.LevelInfo, "docker", cmd...)
+	return shell.Stream(log.LevelInfo, "docker", cmd...)
 }
 
 func (d *RunBuilder) appendDockerArgs(args ...string) {

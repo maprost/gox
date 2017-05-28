@@ -183,6 +183,6 @@ func trimLast(path string, deep int) string {
 }
 
 func trimSrc(path string) string {
-	index := strings.Index(path, "/src/") // look for go root
+	index := strings.Index(path, "/src/") // look for golang root
 	return path[index+1:]
 }

@@ -8,31 +8,29 @@ import (
 	"github.com/maprost/gox/internal/log"
 )
 
-type initCommand struct {
-	hdd  *bool
+type stopCommand struct {
 	log  *string
 	file *string
 }
 
-func InitCommand() args.SubCommand {
-	return &initCommand{}
+func StopCommand() args.SubCommand {
+	return &stopCommand{}
 }
 
-func (cmd *initCommand) Name() string {
-	return "init"
+func (cmd *stopCommand) Name() string {
+	return "stop"
 }
 
-func (cmd *initCommand) DefineFlags(fs *flag.FlagSet) {
-	cmd.hdd = fs.Bool("-hdd", false, "use ")
+func (cmd *stopCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.log = args.LogFlag(fs)
 	cmd.file = args.FileFlag(fs)
 }
 
-func (cmd *initCommand) Run() {
+func (cmd *stopCommand) Run() {
 	var err error
 	cfgFile := "config.gox"
 
-	log.Info("Init go project.")
+	log.Info("Stop go project.")
 
 	// load config file
 	err = gxcfg.InitConfig(cfgFile, gxcfg.DatabaseAccessLink)
