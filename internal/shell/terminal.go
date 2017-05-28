@@ -1,15 +1,15 @@
-package gxbash
+package shell
 
 import (
 	"bufio"
 	"bytes"
 	"errors"
-	"github.com/maprost/gox/gxutil/gxlog"
+	"github.com/maprost/gox/internal/log"
 	"os/exec"
 )
 
-func Command(logLevel gxlog.Level, cmdName string, cmdArgs ...string) (string, error) {
-	gxlog.Print(logLevel, append([]string{cmdName}, cmdArgs...))
+func Command(logLevel log.Level, cmdName string, cmdArgs ...string) (string, error) {
+	log.Print(logLevel, append([]string{cmdName}, cmdArgs...))
 	cmd := exec.Command(cmdName, cmdArgs...)
 
 	var out bytes.Buffer
@@ -22,8 +22,8 @@ func Command(logLevel gxlog.Level, cmdName string, cmdArgs ...string) (string, e
 	return evalOutput(out.String(), stderr.String(), err)
 }
 
-func Stream(logLevel gxlog.Level, cmdName string, cmdArgs ...string) (string, error) {
-	gxlog.Print(logLevel, append([]string{cmdName}, cmdArgs...))
+func Stream(logLevel log.Level, cmdName string, cmdArgs ...string) (string, error) {
+	log.Print(logLevel, append([]string{cmdName}, cmdArgs...))
 	cmd := exec.Command(cmdName, cmdArgs...)
 
 	var out string
@@ -37,7 +37,7 @@ func Stream(logLevel gxlog.Level, cmdName string, cmdArgs ...string) (string, er
 		for stdoutScanner.Scan() {
 			txt := stdoutScanner.Text()
 			out += txt
-			gxlog.Info(txt)
+			log.Info(txt)
 		}
 	}()
 
@@ -52,7 +52,7 @@ func Stream(logLevel gxlog.Level, cmdName string, cmdArgs ...string) (string, er
 		for stderrScanner.Scan() {
 			txt := stderrScanner.Text()
 			stderr += txt
-			gxlog.Warn(txt)
+			log.Warn(txt)
 		}
 	}()
 

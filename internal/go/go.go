@@ -2,19 +2,19 @@ package gxgo
 
 import (
 	"github.com/maprost/gox/gxcfg"
-	"github.com/maprost/gox/gxutil/gxbash"
-	"github.com/maprost/gox/gxutil/gxdocker"
-	"github.com/maprost/gox/gxutil/gxlog"
+	"github.com/maprost/gox/internal/docker"
+	"github.com/maprost/gox/internal/log"
+	"github.com/maprost/gox/internal/shell"
 )
 
 func GoDep() error {
-	_, err := gxbash.Command(gxlog.LevelInfo, "godep", "save", "./...")
+	_, err := shell.Command(log.LevelInfo, "godep", "save", "./...")
 	return err
 }
 
 func Compile() error {
 	cfg := gxcfg.GetConfig()
-	docker := gxdocker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
+	docker := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
 	// add project
 	docker.Value(cfg.FullProjectPath, "/go/"+cfg.ProjectPath)
@@ -38,14 +38,14 @@ func Run() {
 }
 
 func Remove() error {
-	return gxdocker.StopAndRemove(gxcfg.GetConfig().Docker.Container)
+	return docker.StopAndRemove(gxcfg.GetConfig().Docker.Container)
 }
 
 func PullImage() error {
-	return gxdocker.Pull(gxcfg.GetConfig().Docker.Image)
+	return docker.Pull(gxcfg.GetConfig().Docker.Image)
 }
 
-func runDockerCommand(docker gxdocker.RunBuilder, command string) {
+func runDockerCommand(docker docker.RunBuilder, command string) {
 
 	//docker.Value("")
 	//
@@ -64,7 +64,7 @@ func runDockerCommand(docker gxdocker.RunBuilder, command string) {
 	//docker_run.value(system_path, docker_path)
 	//
 	//docker_run.execute("cd /go/src/rpp.de/%s" % self.property.name() + " && " +
-	//	command + " && echo 'go finish #Code445#'")
+	//	shell + " && echo 'go finish #Code445#'")
 	//build_output = docker_run.run()
 	//log.info(build_output)
 	//self.remove()

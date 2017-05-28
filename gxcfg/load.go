@@ -9,33 +9,27 @@ import (
 	"strings"
 )
 
-type godocker struct {
-	Container string
-	Image     string
-	Volume    []string
-}
-
-type dbdocker struct {
-	Container string
-	Image     string
-	Discspace string
-}
-
-type database struct {
-	Driver   string
-	Dbname   string
-	User     string
-	Password string
-	Host     map[string]string
-	Port     map[string]string
-	Docker   dbdocker
-}
-
 type config struct {
-	Port      string
-	Docker    godocker
-	Databases []database
-	Clients   map[string]string
+	Port   string
+	Docker struct {
+		Container string
+		Image     string
+		Volume    []string
+	}
+	Databases []struct {
+		Driver   string
+		Dbname   string
+		User     string
+		Password string
+		Host     map[string]string
+		Port     map[string]string
+		Docker   struct {
+			Container string
+			Image     string
+			Discspace string
+		}
+	}
+	Clients map[string]string
 }
 
 func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {

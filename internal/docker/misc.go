@@ -1,31 +1,32 @@
-package gxdocker
+package docker
 
 import (
-	"github.com/maprost/gox/gxutil/gxbash"
-	"github.com/maprost/gox/gxutil/gxlog"
 	"strings"
+
+	"github.com/maprost/gox/internal/log"
+	"github.com/maprost/gox/internal/shell"
 )
 
 func Pull(image string) error {
-	gxlog.Info("Pull image: ", image)
-	_, err := gxbash.Stream(gxlog.LevelDebug, "docker", "pull", image)
+	log.Info("Pull image: ", image)
+	_, err := shell.Stream(log.LevelDebug, "docker", "pull", image)
 	return err
 }
 
 func StopAndRemove(container string) error {
-	gxlog.Info("Stopping: ", container)
-	_, err := gxbash.Command(gxlog.LevelInfo, "docker", "rm", "-f", "-v", container)
+	log.Info("Stopping: ", container)
+	_, err := shell.Command(log.LevelInfo, "docker", "rm", "-f", "-v", container)
 	return err
 }
 
 func RemoveImage(image string) error {
-	gxlog.Info("Remove Image: ", image)
-	_, err := gxbash.Command(gxlog.LevelInfo, "docker", "rmi", "-f", image)
+	log.Info("Remove Image: ", image)
+	_, err := shell.Command(log.LevelInfo, "docker", "rmi", "-f", image)
 	return err
 }
 
 func RemoveUnusedImages() error {
-	images, err := gxbash.Command(gxlog.LevelDebug, "docker", "images", "-q", "-f", "dangling=true")
+	images, err := shell.Command(log.LevelDebug, "docker", "images", "-q", "-f", "dangling=true")
 	if err != nil {
 		return err
 	}
@@ -42,8 +43,8 @@ func RemoveUnusedImages() error {
 	return nil
 }
 
-func Execute(logLevel gxlog.Level, container string, cmd string) (string, error) {
-	return gxbash.Command(logLevel, "docker", "exec", container, "/bin/sh", "-c", cmd)
+func Execute(logLevel log.Level, container string, cmd string) (string, error) {
+	return shell.Command(logLevel, "docker", "exec", container, "/bin/sh", "-c", cmd)
 }
 
 //def get_version():
@@ -72,10 +73,10 @@ func Execute(logLevel gxlog.Level, container string, cmd string) (string, error)
 //
 //
 //
-//def execute_cmd(container, cmd):
-//return ["docker", "exec", container, "/bin/sh", "-c", cmd]
+//def execute_cmd(container, shell):
+//return ["docker", "exec", container, "/bin/sh", "-c", shell]
 //
 //
 //def run_log_mode(image):
-//command = "docker logs -f %s" % image
-//base.execute_and_print_output(command)
+//shell = "docker logs -f %s" % image
+//base.execute_and_print_output(shell)

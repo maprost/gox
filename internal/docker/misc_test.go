@@ -1,63 +1,63 @@
-package gxdocker_test
+package docker_test
 
 import (
 	"github.com/maprost/assertion"
 	"testing"
 
-	"github.com/maprost/gox/gxutil/gxdocker"
+	"github.com/maprost/gox/internal/docker"
 )
 
 func TestPull(t *testing.T) {
 	assert := assertion.New(t)
 
-	err := gxdocker.Pull("hello-world")
+	err := docker.Pull("hello-world")
 	assert.Nil(err)
 }
 
 func TestStopAndRemove(t *testing.T) {
 	assert := assertion.New(t)
 
-	err := gxdocker.Pull("hello-world")
+	err := docker.Pull("hello-world")
 	assert.Nil(err)
 
-	run := gxdocker.NewRunBuilder("TestStopAndRemove", "hello-world")
+	run := docker.NewRunBuilder("TestStopAndRemove", "hello-world")
 	_, err = run.Run()
 	assert.Nil(err)
 
-	err = gxdocker.StopAndRemove("TestStopAndRemove")
+	err = docker.StopAndRemove("TestStopAndRemove")
 	assert.Nil(err)
 }
 
 func TestRemoveImage(t *testing.T) {
 	assert := assertion.New(t)
 
-	err := gxdocker.Pull("hello-world")
+	err := docker.Pull("hello-world")
 	assert.Nil(err)
 
-	err = gxdocker.RemoveImage("hello-world")
+	err = docker.RemoveImage("hello-world")
 	assert.Nil(err)
 }
 
 func TestRemoveUnusedImages(t *testing.T) {
 	assert := assertion.New(t)
 
-	err := gxdocker.Pull("hello-world")
+	err := docker.Pull("hello-world")
 	assert.Nil(err)
 
-	err = gxdocker.RemoveUnusedImages()
+	err = docker.RemoveUnusedImages()
 	assert.Nil(err)
 }
 
 func TestRemoveUnusedImages_doItTwice(t *testing.T) {
 	assert := assertion.New(t)
 
-	err := gxdocker.Pull("hello-world")
+	err := docker.Pull("hello-world")
 	assert.Nil(err)
 
-	err = gxdocker.RemoveUnusedImages()
+	err = docker.RemoveUnusedImages()
 	assert.Nil(err)
 
 	// should be empty
-	err = gxdocker.RemoveUnusedImages()
+	err = docker.RemoveUnusedImages()
 	assert.Nil(err)
 }

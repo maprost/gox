@@ -1,11 +1,11 @@
-package main
+package gox
 
 import (
 	"fmt"
 	"github.com/maprost/gox/gxcfg"
-	"github.com/maprost/gox/gxutil/gxbash"
-	"github.com/maprost/gox/gxutil/gxgo"
-	"github.com/maprost/gox/gxutil/gxlog"
+	"github.com/maprost/gox/internal/go"
+	"github.com/maprost/gox/internal/log"
+	"github.com/maprost/gox/internal/shell"
 	"log"
 	"os"
 )
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	fmt.Println(gxcfg.GetConfig())
-	gxbash.Stream(gxlog.LevelInfo, "ls", "-ahs")
+	shell.Stream(log.LevelInfo, "ls", "-ahs")
 
 	fmt.Println(os.Getenv("GOPATH"))
 

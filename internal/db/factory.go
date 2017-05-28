@@ -1,4 +1,4 @@
-package gxdb
+package db
 
 import "github.com/maprost/gox/gxcfg"
 

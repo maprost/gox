@@ -1,4 +1,4 @@
-package gxlog
+package log
 
 import "fmt"
 

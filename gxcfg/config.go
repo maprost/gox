@@ -54,7 +54,7 @@ type Config struct {
 	Port            string
 	FullProjectPath string // -> /home/maprost/go/src/github.com/maprost/gox
 	ProjectPath     string // -> src/github.com/maprost/gox
-	CmdPath         string // -> src/github.com/maprost/gox/cmd/gox-build
+	CmdPath         string // -> src/github.com/maprost/gox/shell/gox-build
 	Database        []Database
 	Docker          CfgDocker
 	Clients         map[string]string
