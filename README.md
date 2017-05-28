@@ -1,4 +1,4 @@
-[![GoDoc](https://godoc.org/github.com/maprost/gox?status.svg)](https://godoc.org/github.com/maprost/gox)
+[![GoDoc](https://godoc.org/github.com/maprost/gox/gxcfg?status.svg)](https://godoc.org/github.com/maprost/gox/gxcfg)
 
 # GoX (0.1 alpha)
 
