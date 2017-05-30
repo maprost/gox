@@ -3,15 +3,15 @@ package internal
 import (
 	"flag"
 
-	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
+	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
 )
 
 type runCommand struct {
-	godep *bool
-	log   *string
-	file  *string
+	baseCommand
+	hdd     args.HddFlag
+	profile string
 }
 
 func RunCommand() args.SubCommand {
@@ -23,21 +23,19 @@ func (cmd *runCommand) Name() string {
 }
 
 func (cmd *runCommand) DefineFlags(fs *flag.FlagSet) {
-	cmd.godep = fs.Bool("-hdd", false, "use ")
-	cmd.log = args.LogFlag(fs)
-	cmd.file = args.FileFlag(fs)
+	cmd.baseCommand.DefineFlags(fs)
+	cmd.hdd.DefineFlag(fs)
+	fs.StringVar(&cmd.profile, "profile", "local", "Choose your profile.")
 }
 
 func (cmd *runCommand) Run() {
+	cmd.baseCommand.init()
+	log.Info("Run go project with profile:", cmd.profile, ".")
 	var err error
-	cfgFile := "config.gox"
 
-	log.Info("Run go project.")
+	err = startDatabases(cmd.hdd.Hdd)
+	checkFatal(err, "Can't run databases: ")
 
-	// load config file
-	err = gxcfg.InitConfig(cfgFile, gxcfg.DatabaseAccessLink)
-	if err != nil {
-		log.Fatal("Can't init config: ", err.Error())
-	}
-
+	err = golang.Run(cmd.profile)
+	checkFatal(err, "Can't run docker project: ")
 }

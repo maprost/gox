@@ -1,5 +1,9 @@
 {
-  "port": "8080",
+  "port": {
+    "prod": "80",
+    "test1": "8087",
+    "local": "8080"
+  },
   "docker": {
     "container": "user-server",
     "image": "golang:latest",
@@ -29,7 +33,11 @@
     }
   ],
   "clients": {
-    "LogServer": "http://172.17.0.1:8091"
+    "LogServer": {
+      "prod": "https://coolserver.log.de",
+      "test1": "https://coolserver.log.test:8090",
+      "local": "http://172.17.0.1:8091"
+    }
   }
 }
 

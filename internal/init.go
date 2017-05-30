@@ -3,15 +3,13 @@ package internal
 import (
 	"flag"
 
-	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
 	"github.com/maprost/gox/internal/log"
 )
 
 type initCommand struct {
-	hdd  *bool
-	log  *string
-	file *string
+	baseCommand
+	hdd args.HddFlag
 }
 
 func InitCommand() args.SubCommand {
@@ -23,21 +21,15 @@ func (cmd *initCommand) Name() string {
 }
 
 func (cmd *initCommand) DefineFlags(fs *flag.FlagSet) {
-	cmd.hdd = fs.Bool("-hdd", false, "use ")
-	cmd.log = args.LogFlag(fs)
-	cmd.file = args.FileFlag(fs)
+	cmd.baseCommand.DefineFlags(fs)
+	cmd.hdd.DefineFlag(fs)
 }
 
 func (cmd *initCommand) Run() {
-	var err error
-	cfgFile := "config.gox"
-
+	cmd.baseCommand.init()
 	log.Info("Init go project.")
+	var err error
 
-	// load config file
-	err = gxcfg.InitConfig(cfgFile, gxcfg.DatabaseAccessLink)
-	if err != nil {
-		log.Fatal("Can't init config: ", err.Error())
-	}
-
+	err = startDatabases(cmd.hdd.Hdd)
+	checkFatal(err, "Can't run databases: ")
 }

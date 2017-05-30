@@ -14,7 +14,7 @@ func TestProperties_checkFieldWithPortOption(t *testing.T) {
 	// fix path
 	os.Args[0] = "/home/maprost/go/src/github.com/maprost/gox/gxcfg/config_test.gp"
 
-	err := gxcfg.InitConfig("example.gox", gxcfg.DatabaseAccessPort)
+	err := gxcfg.InitConfig("example.gx", gxcfg.DatabaseAccessPort)
 	assert.Nil(err)
 	assert.NotNil(gxcfg.GetConfig())
 
@@ -50,7 +50,7 @@ func TestProperties_checkFieldWithLinkOption(t *testing.T) {
 	// fix path
 	os.Args[0] = "/home/maprost/go/src/github.com/maprost/gox/gxcfg/config_test.gp"
 
-	err := gxcfg.InitConfig("example.gox", gxcfg.DatabaseAccessLink)
+	err := gxcfg.InitConfig("example.gx", gxcfg.DatabaseAccessLink)
 	assert.Nil(err)
 	assert.NotNil(gxcfg.GetConfig())
 

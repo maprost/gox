@@ -1,11 +1,29 @@
 package args
 
-import "flag"
+import (
+	"flag"
+)
 
-func LogFlag(fs *flag.FlagSet) *string {
-	return fs.String("-log", "info", "Log level: [debug, info, warn]")
+type LogFlag struct {
+	LogLevel string
 }
 
-func FileFlag(fs *flag.FlagSet) *string {
-	return fs.String("-file", "config.gox", "Path for config file.")
+func (lf *LogFlag) DefineFlag(fs *flag.FlagSet) {
+	fs.StringVar(&lf.LogLevel, "log", "info", "Log level: [debug, info, warn]")
+}
+
+type FileFlag struct {
+	File string
+}
+
+func (ff *FileFlag) DefineFlag(fs *flag.FlagSet) {
+	fs.StringVar(&ff.File, "file", "config.gx", "Path for config file.")
+}
+
+type HddFlag struct {
+	Hdd bool
+}
+
+func (hf *HddFlag) DefineFlag(fs *flag.FlagSet) {
+	fs.BoolVar(&hf.Hdd, "hdd", false, "Use a persisted storage for database.")
 }

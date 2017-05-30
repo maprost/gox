@@ -22,7 +22,7 @@ func StopAndRemove(container string) error {
 		return err
 	}
 
-	// if the contains not in use -> nothing to do
+	// if the container is not in use -> nothing to do
 	if len(id) == 0 {
 		return nil
 	}
@@ -33,8 +33,19 @@ func StopAndRemove(container string) error {
 }
 
 func RemoveImage(image string) error {
+	// check if the container is there
+	id, err := shell.Stream(log.LevelDebug, "docker", "images", image, "-q")
+	if err != nil {
+		return err
+	}
+
+	// if the image not in there -> nothing to do
+	if len(id) == 0 {
+		return nil
+	}
+
 	log.Info("Remove Image: ", image)
-	_, err := shell.Command(log.LevelInfo, "docker", "rmi", "-f", image)
+	_, err = shell.Command(log.LevelInfo, "docker", "rmi", "-f", image)
 	return err
 }
 

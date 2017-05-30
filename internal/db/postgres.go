@@ -42,7 +42,7 @@ func (p *postgres) Remove() error {
 	return docker.StopAndRemove(p.cfg.Docker.Container)
 }
 
-func (p *postgres) Pull() error {
+func (p *postgres) PullDockerImage() error {
 	return docker.Pull(p.cfg.Docker.Image)
 }
 

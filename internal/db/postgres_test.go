@@ -12,7 +12,7 @@ func TestPostgres_Run(t *testing.T) {
 	assert := assertion.New(t)
 	log.InitLogger(log.LevelInfo)
 
-	err := gxcfg.InitConfig("example.gox", gxcfg.DatabaseAccessPort)
+	err := gxcfg.InitConfig("example.gx", gxcfg.DatabaseAccessPort)
 	assert.Nil(err)
 
 	assert.Len(gxcfg.GetConfig().Database, 1)

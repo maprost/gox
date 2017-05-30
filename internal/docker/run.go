@@ -50,7 +50,7 @@ func (d *RunBuilder) EnvironmentVariable(v string) *RunBuilder {
 
 // Execute can only use once per shell
 func (d *RunBuilder) Execute(args ...string) *RunBuilder {
-	d.args = append([]string{"/bin/shell", "-c"}, args...)
+	d.args = append([]string{"/bin/bash", "-c"}, args...)
 	return d
 }
 

@@ -5,12 +5,13 @@ import (
 
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
+	"github.com/maprost/gox/internal/db"
+	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
 )
 
 type stopCommand struct {
-	log  *string
-	file *string
+	baseCommand
 }
 
 func StopCommand() args.SubCommand {
@@ -22,20 +23,22 @@ func (cmd *stopCommand) Name() string {
 }
 
 func (cmd *stopCommand) DefineFlags(fs *flag.FlagSet) {
-	cmd.log = args.LogFlag(fs)
-	cmd.file = args.FileFlag(fs)
+	cmd.baseCommand.DefineFlags(fs)
 }
 
 func (cmd *stopCommand) Run() {
-	var err error
-	cfgFile := "config.gox"
-
+	cmd.baseCommand.init()
 	log.Info("Stop go project.")
+	var err error
 
-	// load config file
-	err = gxcfg.InitConfig(cfgFile, gxcfg.DatabaseAccessLink)
-	if err != nil {
-		log.Fatal("Can't init config: ", err.Error())
+	// stop server
+	err = golang.RemoveDockerContainer()
+	checkFatal(err, "Can't stop docker container: ")
+
+	// stop databases
+	for _, dbConf := range gxcfg.GetConfig().Database {
+		dbx := db.New(dbConf)
+		err = dbx.Remove()
+		checkFatal(err, "Can't stop database: ")
 	}
-
 }

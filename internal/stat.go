@@ -5,14 +5,16 @@ import (
 
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
+	"github.com/maprost/gox/internal/db"
+	"github.com/maprost/gox/internal/docker"
+	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
 )
 
 type statCommand struct {
-	pull  *bool
-	clean *bool
-	log   *string
-	file  *string
+	baseCommand
+	pull  bool
+	clean bool
 }
 
 func StatCommand() args.SubCommand {
@@ -24,22 +26,31 @@ func (cmd *statCommand) Name() string {
 }
 
 func (cmd *statCommand) DefineFlags(fs *flag.FlagSet) {
-	cmd.pull = fs.Bool("-pull", false, "")
-	cmd.clean = fs.Bool("-clean", false, "")
-	cmd.log = args.LogFlag(fs)
-	cmd.file = args.FileFlag(fs)
+	cmd.baseCommand.DefineFlags(fs)
+	fs.BoolVar(&cmd.pull, "pull", false, "Pull newest docker images for your project.")
+	fs.BoolVar(&cmd.clean, "clean", false, "Remove unused docker images.")
 }
 
 func (cmd *statCommand) Run() {
-	var err error
-	cfgFile := "config.gox"
-
+	cmd.baseCommand.init()
 	log.Info("Status of go project.")
+	var err error
 
-	// load config file
-	err = gxcfg.InitConfig(cfgFile, gxcfg.DatabaseAccessLink)
-	if err != nil {
-		log.Fatal("Can't init config: ", err.Error())
+	if cmd.clean {
+		err = docker.RemoveUnusedImages()
+		checkFatal(err, "Can't remove unused images: ")
+
 	}
 
+	if cmd.pull {
+		err = golang.PullDockerImage()
+		checkFatal(err, "Can't pull golang image: ")
+
+		// pull databases
+		for _, dbConf := range gxcfg.GetConfig().Database {
+			dbx := db.New(dbConf)
+			err = dbx.PullDockerImage()
+			checkFatal(err, "Can't pull database image: ")
+		}
+	}
 }
