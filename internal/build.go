@@ -46,30 +46,30 @@ func (cmd *buildCommand) Run() {
 	err = golang.Compile()
 	checkFatal(err, "Can't compile: ")
 
-	// remove binary if there is an error
-	defer func() {
-		if err != nil {
-			shell.Command(log.LevelDebug, "rm", golang.BinaryName())
-		}
-	}()
-
 	// remove build container
 	err = golang.RemoveDockerContainer()
-	checkFatal(err, "Can't remove old container: ")
+	checkFatalAndDeleteBinary(err, "Can't remove old container: ")
 
 	// start databases
 	err = startDatabases(false)
-	checkFatal(err, "Can't run databases: ")
+	checkFatalAndDeleteBinary(err, "Can't run databases: ")
 
 	// test (golang test)
 	err = golang.Test()
-	checkFatal(err, "Can't run tests: ")
+	checkFatalAndDeleteBinary(err, "Can't run tests: ")
 
 	// remove test container
 	err = golang.RemoveDockerContainer()
-	checkFatal(err, "Can't remove old container: ")
+	checkFatalAndDeleteBinary(err, "Can't remove old container: ")
 
 	// build docker images
 	err = golang.BuildDockerImage(cmd.baseCommand.file.File)
-	checkFatal(err, "Can't build docker image: ")
+	checkFatalAndDeleteBinary(err, "Can't build docker image: ")
+}
+
+func checkFatalAndDeleteBinary(err error, msg string) {
+	if err != nil {
+		shell.Command(log.LevelDebug, "rm", golang.BinaryName())
+		log.Fatal(msg, err.Error())
+	}
 }

@@ -22,7 +22,8 @@ func Compile() error {
 	dock.Value(cfg.FullProjectPath, "/go/"+cfg.ProjectPath)
 	dock.Execute("cd /go/" + cfg.CmdPath +
 		" && echo \"fmt\" && go fmt ./..." +
-		" && echo \"build\" && go build -o " + BinaryName())
+		" && echo \"build\" && go build -o " + BinaryName() +
+		" && chmod o+w " + BinaryName())
 
 	_, err := dock.Run()
 	return err
