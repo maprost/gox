@@ -27,7 +27,7 @@ func (cmd *stopCommand) DefineFlags(fs *flag.FlagSet) {
 }
 
 func (cmd *stopCommand) Run() {
-	cmd.baseCommand.init()
+	cmd.baseCommand.init(false)
 	log.Info("Stop go project.")
 	var err error
 

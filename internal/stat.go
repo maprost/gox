@@ -32,7 +32,7 @@ func (cmd *statCommand) DefineFlags(fs *flag.FlagSet) {
 }
 
 func (cmd *statCommand) Run() {
-	cmd.baseCommand.init()
+	cmd.baseCommand.init(false)
 	log.Info("Status of go project.")
 	var err error
 

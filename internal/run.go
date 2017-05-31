@@ -29,7 +29,7 @@ func (cmd *runCommand) DefineFlags(fs *flag.FlagSet) {
 }
 
 func (cmd *runCommand) Run() {
-	cmd.baseCommand.init()
+	cmd.baseCommand.init(false)
 	log.Info("Run go project with profile:", cmd.profile, ".")
 	var err error
 

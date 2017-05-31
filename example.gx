@@ -6,7 +6,7 @@
   },
   "docker": {
     "container": "user-server",
-    "image": "golang:latest",
+    "image": "golang:latest", // optional
     "volume": [
       "core/public/"
     ]
@@ -18,16 +18,16 @@
       "user": "postgres",
       "password": "",
       "port": {
-        "port": "5437",
-        "link": "5432"
+        "port": "5437", // optional
+        "link": "5432" // weg ist std
       },
       "host": {
         "port": "localhost",
-        "link": "postgres5437"
+        "link": "postgres5437"// weg ist container
       },
       "docker": {
-        "container": "postgres5437",
-        "image": "postgres:latest",
+        "container": "postgres5437", // optional -> driver + port
+        "image": "postgres:latest", // optional
         "discspace": "~/workspace/database/postgres5437"
       }
     }

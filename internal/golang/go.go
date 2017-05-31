@@ -14,28 +14,38 @@ func GoDep() error {
 	return err
 }
 
-func Compile() error {
+func CompileInDocker() error {
 	cfg := gxcfg.GetConfig()
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
 	// add project
-	dock.Value(cfg.FullProjectPath, "/go/"+cfg.ProjectPath)
-	dock.Execute("cd /go/" + cfg.CmdPath +
-		" && echo \"fmt\" && go fmt ./..." +
-		" && echo \"build\" && go build -o " + BinaryName() +
+	dock.Value(cfg.FullProjectPath, cfg.Docker.ProjectPath)
+	dock.Execute("cd " + cfg.Docker.ProjectPath +
+		" && go fmt ./..." +
+		" && go build -o " + BinaryName() +
 		" && chmod o+w " + BinaryName())
 
 	_, err := dock.Run()
 	return err
 }
 
-func Test() error {
+func CompileBinary() (err error) {
+	_, err = shell.Command(log.LevelDebug, "go", "fmt", "./...")
+	if err != nil {
+		return
+	}
+
+	_, err = shell.Stream(log.LevelInfo, "go", "build")
+	return
+}
+
+func TestInDocker() error {
 	cfg := gxcfg.GetConfig()
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
-	// add project
-	dock.Value(cfg.FullProjectPath, "/go/"+cfg.ProjectPath)
-	dock.Execute("cd /go/" + cfg.CmdPath + " && echo \"test\" && go test ./...")
+	// add project (TODO: add database access (link) + profile)
+	dock.Value(cfg.FullProjectPath, cfg.Docker.ProjectPath)
+	dock.Execute("cd " + cfg.Docker.ProjectPath + " && go test ./...")
 
 	_, err := dock.Run()
 	return err
@@ -50,11 +60,11 @@ func BuildDockerImage(cfgFile string) error {
 	}
 
 	fileContent := "From " + cfg.Docker.Image + "\n\n" +
-		"COPY " + BinaryName() + " /go/" + cfg.CmdPath + "\n\n" +
-		"COPY " + cfg.FullProjectPath + "/" + cfgFile + " /go/" + cfg.ProjectPath + "/\n\n"
+		"ADD " + BinaryName() + " " + cfg.Docker.ProjectPath + "\n\n" +
+		"ADD " + cfgFile + " " + cfg.Docker.ProjectPath + "\n\n"
 	// add volume
 
-	fileContent += "ENTRYPOINT [\"/go/" + cfg.CmdPath + "/" + BinaryName() + "]" + "\n"
+	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + "]" + "\n"
 	err = ioutil.WriteFile("DockerFile", []byte(fileContent), os.ModeType)
 	if err != nil {
 		return err

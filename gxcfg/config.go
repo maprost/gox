@@ -47,6 +47,8 @@ type CfgDocker struct {
 	// Important for building the docker image
 	// Insert public content, like website templates or image path.
 	Volumes []string
+
+	ProjectPath string // -> /go/src/github.com/maprost/gox
 }
 
 type Config struct {
@@ -54,7 +56,6 @@ type Config struct {
 	Port            string
 	FullProjectPath string // -> /home/maprost/golang/src/github.com/maprost/gox
 	ProjectPath     string // -> src/github.com/maprost/gox
-	CmdPath         string // -> src/github.com/maprost/gox/shell/gox-build
 	Database        []Database
 	Docker          CfgDocker
 	Clients         map[string]string
@@ -62,8 +63,8 @@ type Config struct {
 
 var singleton *Config = nil
 
-func InitConfig(file string, databaseAccess DatabaseAccess) error {
-	cfg, err := loadConfig(file, databaseAccess)
+func InitConfig(file string, databaseAccess DatabaseAccess, configSearch bool) error {
+	cfg, err := loadConfig(file, databaseAccess, configSearch)
 	if err != nil {
 		return err
 	}

@@ -6,15 +6,14 @@ import (
 	"github.com/maprost/gox/internal/args"
 	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
-	"github.com/maprost/gox/internal/shell"
 )
 
 type buildCommand struct {
 	baseCommand
-	godep bool
+	godep args.GoDepFlag
 }
 
-func CompileCommand() args.SubCommand {
+func BuildCommand() args.SubCommand {
 	return &buildCommand{}
 }
 
@@ -24,15 +23,15 @@ func (cmd *buildCommand) Name() string {
 
 func (cmd *buildCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
-	fs.BoolVar(&cmd.godep, "godep", false, "do 'godep save ./...' before compiling")
+	cmd.godep.DefineFlag(fs)
 }
 
 func (cmd *buildCommand) Run() {
-	cmd.baseCommand.init()
-	log.Info("Compile go project.")
+	cmd.baseCommand.init(false)
+	log.Info("CompileInDocker go project.")
 	var err error
 
-	if cmd.godep {
+	if cmd.godep.GoDep {
 		// run godep
 		err = golang.GoDep()
 		checkFatal(err, "Can't run godep: ")
@@ -43,7 +42,7 @@ func (cmd *buildCommand) Run() {
 	checkFatal(err, "Can't remove old container: ")
 
 	// build (golang build)
-	err = golang.Compile()
+	err = golang.CompileInDocker()
 	checkFatal(err, "Can't compile: ")
 
 	// remove build container
@@ -55,7 +54,7 @@ func (cmd *buildCommand) Run() {
 	checkFatalAndDeleteBinary(err, "Can't run databases: ")
 
 	// test (golang test)
-	err = golang.Test()
+	err = golang.TestInDocker()
 	checkFatalAndDeleteBinary(err, "Can't run tests: ")
 
 	// remove test container
@@ -65,11 +64,4 @@ func (cmd *buildCommand) Run() {
 	// build docker images
 	err = golang.BuildDockerImage(cmd.baseCommand.file.File)
 	checkFatalAndDeleteBinary(err, "Can't build docker image: ")
-}
-
-func checkFatalAndDeleteBinary(err error, msg string) {
-	if err != nil {
-		shell.Command(log.LevelDebug, "rm", golang.BinaryName())
-		log.Fatal(msg, err.Error())
-	}
 }

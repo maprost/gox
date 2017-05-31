@@ -32,15 +32,17 @@ type config struct {
 	Clients map[string]string
 }
 
-func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {
-	var conf Config
-	var err error
+func loadConfig(file string, databaseAccess DatabaseAccess, configSearch bool) (conf Config, err error) {
+	deep := 0
+	if configSearch {
+		deep = 8
+	}
 
 	var cfg config
 	// TODO: nur gox-init hat die suche, alle anderen müssen die config angeben
-	deep, err := searchConfig(file, 8, &cfg)
+	deep, err = searchConfig(file, deep, &cfg)
 	if err != nil {
-		return conf, err
+		return
 	}
 
 	// build config
@@ -54,32 +56,31 @@ func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {
 
 	conf.FullProjectPath, err = getFullProjectPath(deep)
 	if err != nil {
-		return conf, err
+		return
 	}
 
 	conf.ProjectPath, err = getProjectPath(deep)
 	if err != nil {
-		return conf, err
+		return
 	}
+	conf.Docker.ProjectPath = "/go/" + conf.ProjectPath
 
-	conf.CmdPath, err = getCmdPath()
-	if err != nil {
-		return conf, err
-	}
-
-	nameIndex := strings.LastIndex(conf.CmdPath, "/")
-	conf.Name = conf.CmdPath[nameIndex+1:]
+	nameIndex := strings.LastIndex(conf.ProjectPath, "/")
+	conf.Name = conf.ProjectPath[nameIndex+1:]
 
 	// build database list
 	conf.Database = make([]Database, len(cfg.Databases))
 	for i, db := range cfg.Databases {
-		host, err := getValue(db.Host, databaseAccess)
+		var host string
+		host, err = getValue(db.Host, databaseAccess)
 		if err != nil {
-			return conf, err
+			return
 		}
-		port, err := getValue(db.Port, databaseAccess)
+
+		var port string
+		port, err = getValue(db.Port, databaseAccess)
 		if err != nil {
-			return conf, err
+			return
 		}
 
 		conf.Database[i] = Database{
@@ -97,7 +98,7 @@ func loadConfig(file string, databaseAccess DatabaseAccess) (Config, error) {
 		}
 	}
 
-	return conf, nil
+	return
 }
 
 func searchConfig(filename string, levelsDown int, properties interface{}) (int, error) {
@@ -106,7 +107,7 @@ func searchConfig(filename string, levelsDown int, properties interface{}) (int,
 
 	relativeRoot := ""
 	index := 0
-	for index < levelsDown {
+	for index <= levelsDown {
 		file, err = ioutil.ReadFile(relativeRoot + filename)
 		if err != nil {
 			index++
@@ -144,15 +145,6 @@ func getFullProjectPath(deep int) (string, error) {
 
 func getProjectPath(deep int) (string, error) {
 	path, err := getFullProjectPath(deep)
-	if err != nil {
-		return "", err
-	}
-
-	return trimSrc(path), nil
-}
-
-func getCmdPath() (string, error) {
-	path, err := getPath()
 	if err != nil {
 		return "", err
 	}

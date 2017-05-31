@@ -26,7 +26,7 @@ func (cmd *initCommand) DefineFlags(fs *flag.FlagSet) {
 }
 
 func (cmd *initCommand) Run() {
-	cmd.baseCommand.init()
+	cmd.baseCommand.init(true)
 	log.Info("Init go project.")
 	var err error
 

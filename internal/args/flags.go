@@ -4,12 +4,12 @@ import (
 	"flag"
 )
 
-type LogFlag struct {
-	LogLevel string
+type DebugFlag struct {
+	DebugFlag bool
 }
 
-func (lf *LogFlag) DefineFlag(fs *flag.FlagSet) {
-	fs.StringVar(&lf.LogLevel, "log", "info", "Log level: [debug, info, warn]")
+func (df *DebugFlag) DefineFlag(fs *flag.FlagSet) {
+	fs.BoolVar(&df.DebugFlag, "d", false, "Show debug logs")
 }
 
 type FileFlag struct {
@@ -26,4 +26,12 @@ type HddFlag struct {
 
 func (hf *HddFlag) DefineFlag(fs *flag.FlagSet) {
 	fs.BoolVar(&hf.Hdd, "hdd", false, "Use a persisted storage for database.")
+}
+
+type GoDepFlag struct {
+	GoDep bool
+}
+
+func (gdf *GoDepFlag) DefineFlag(fs *flag.FlagSet) {
+	fs.BoolVar(&gdf.GoDep, "godep", false, "do 'godep save ./...' before compiling")
 }
