@@ -10,14 +10,17 @@ import (
 
 func TestPostgres_Run(t *testing.T) {
 	assert := assertion.New(t)
-	log.InitLogger(log.LevelInfo)
+	log.InitLogger(log.LevelDebug)
 
-	err := gxcfg.InitConfig("example.gx", gxcfg.DatabaseAccessPort)
+	err := gxcfg.InitConfig("minimal.gx", true)
 	assert.Nil(err)
 
 	assert.Len(gxcfg.GetConfig().Database, 1)
 	pq := db.New(gxcfg.GetConfig().Database[0])
 
 	err = pq.Run(false)
+	assert.Nil(err)
+
+	err = pq.Remove()
 	assert.Nil(err)
 }
