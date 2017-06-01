@@ -29,6 +29,24 @@ type config struct {
 }
 
 func loadConfig(filename string, properties interface{}, configSearch bool) (int, error) {
+	file, index, err := searchFile(filename, configSearch)
+
+	// nothing found?
+	if err != nil {
+		return index, err
+	}
+
+	// something found? -> convert
+	err = json.Unmarshal(file, &properties)
+	return index, err
+}
+
+func checkFileInsideDockerContainer(configSearch bool) bool {
+	_, _, err := searchFile(FileInsideDockerContainer, configSearch)
+	return err == nil
+}
+
+func searchFile(filename string, configSearch bool) ([]byte, int, error) {
 	levelsDown := 0
 	if configSearch {
 		levelsDown = 8
@@ -48,12 +66,6 @@ func loadConfig(filename string, properties interface{}, configSearch bool) (int
 			break
 		}
 	}
-	// nothing found?
-	if err != nil {
-		return index, err
-	}
 
-	// something found? -> convert
-	err = json.Unmarshal(file, &properties)
-	return index, err
+	return file, index, err
 }

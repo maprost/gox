@@ -45,7 +45,7 @@ func createConfig(filename string, configSearch bool) (conf Config, err error) {
 	conf.Docker.ProjectPath = "/go/" + conf.ProjectPath
 
 	// build database list
-	insideDockerContainer := checkFileInsideDockerContainer()
+	insideDockerContainer := checkFileInsideDockerContainer(configSearch)
 
 	conf.Database = make([]Database, len(cfg.Databases))
 	for i, db := range cfg.Databases {
@@ -120,9 +120,4 @@ func getFullProjectPath() (string, error) {
 func trimSrc(path string) string {
 	index := strings.Index(path, "/src/") // look for golang root
 	return path[index+1:]
-}
-
-func checkFileInsideDockerContainer() bool {
-	_, err := ioutil.ReadFile(FileInsideDockerContainer)
-	return err == nil
 }
