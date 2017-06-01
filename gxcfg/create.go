@@ -2,7 +2,6 @@ package gxcfg
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
