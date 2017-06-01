@@ -12,6 +12,7 @@ import (
 
 type binRunCommand struct {
 	baseCommand
+	hdd  args.HddFlag
 	fast bool
 }
 
@@ -25,6 +26,7 @@ func (cmd *binRunCommand) Name() string {
 
 func (cmd *binRunCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
+	cmd.hdd.DefineFlag(fs)
 	fs.BoolVar(&cmd.fast, "fast", false, "Skip starting database.")
 }
 
@@ -37,7 +39,7 @@ func (cmd *binRunCommand) Run() {
 	checkFatal(err, "Can't compile: ")
 
 	if cmd.fast == false {
-		err = startDatabases(false)
+		err = startDatabases(cmd.hdd.Hdd)
 		checkFatalAndDeleteBinary(err, "Can't run databases: ")
 	}
 

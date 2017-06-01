@@ -17,7 +17,7 @@ type FileFlag struct {
 }
 
 func (ff *FileFlag) DefineFlag(fs *flag.FlagSet) {
-	fs.StringVar(&ff.File, "file", "config.gx", "Path for config file.")
+	fs.StringVar(&ff.File, "file", "local.gx", "Path for config file.")
 }
 
 type HddFlag struct {
@@ -26,12 +26,4 @@ type HddFlag struct {
 
 func (hf *HddFlag) DefineFlag(fs *flag.FlagSet) {
 	fs.BoolVar(&hf.Hdd, "hdd", false, "Use a persisted storage for database.")
-}
-
-type GoDepFlag struct {
-	GoDep bool
-}
-
-func (gdf *GoDepFlag) DefineFlag(fs *flag.FlagSet) {
-	fs.BoolVar(&gdf.GoDep, "godep", false, "do 'godep save ./...' before compiling")
 }

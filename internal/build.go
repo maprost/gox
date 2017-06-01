@@ -10,7 +10,8 @@ import (
 
 type buildCommand struct {
 	baseCommand
-	godep args.GoDepFlag
+	godep  bool
+	script bool
 }
 
 func BuildCommand() args.SubCommand {
@@ -23,7 +24,8 @@ func (cmd *buildCommand) Name() string {
 
 func (cmd *buildCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
-	cmd.godep.DefineFlag(fs)
+	fs.BoolVar(&cmd.godep, "godep", false, "do 'godep save ./...' before compiling")
+	fs.BoolVar(&cmd.godep, "script", false, "creates a shell script to run the docker image and all database docker container.")
 }
 
 func (cmd *buildCommand) Run() {
@@ -31,7 +33,7 @@ func (cmd *buildCommand) Run() {
 	log.Info("CompileInDocker go project.")
 	var err error
 
-	if cmd.godep.GoDep {
+	if cmd.godep {
 		// run godep
 		err = golang.GoDep()
 		checkFatal(err, "Can't run godep: ")

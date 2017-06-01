@@ -43,9 +43,9 @@ func TestInDocker() error {
 	cfg := gxcfg.GetConfig()
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
-	// add project (TODO: add database access (link) + profile)
+	// add project
 	dock.Value(cfg.FullProjectPath, cfg.Docker.ProjectPath)
-	dock.Execute("cd " + cfg.Docker.ProjectPath + " && go test ./...")
+	dock.Execute("cd " + cfg.Docker.ProjectPath + " && touch " + gxcfg.FileInsideDockerContainer + " && go test ./...")
 
 	_, err := dock.Run()
 	return err
@@ -61,7 +61,8 @@ func BuildDockerImage(cfgFile string) error {
 
 	fileContent := "From " + cfg.Docker.Image + "\n\n" +
 		"ADD " + BinaryName() + " " + cfg.Docker.ProjectPath + "\n\n" +
-		"ADD " + cfgFile + " " + cfg.Docker.ProjectPath + "\n\n"
+		"ADD " + cfgFile + " " + cfg.Docker.ProjectPath + "\n\n" +
+		"RUN touch " + cfg.Docker.ProjectPath + "/" + gxcfg.FileInsideDockerContainer
 	// add volume
 
 	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + "]" + "\n"

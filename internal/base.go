@@ -2,6 +2,7 @@ package internal
 
 import (
 	"flag"
+
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
 	"github.com/maprost/gox/internal/db"
@@ -28,7 +29,7 @@ func (cmd *baseCommand) init(configSearch bool) {
 	}
 
 	// load config file
-	err := gxcfg.InitConfig(cmd.file.File, gxcfg.DatabaseAccessLink, configSearch)
+	err := gxcfg.InitConfig(cmd.file.File, configSearch)
 	checkFatal(err, "Can't init config: ")
 }
 

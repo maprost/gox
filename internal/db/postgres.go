@@ -23,7 +23,7 @@ func (p *postgres) Run(hdd bool) (err error) {
 
 	docker := docker.NewRunBuilder(p.cfg.Docker.Container, p.cfg.Docker.Image)
 	docker.Detach()
-	docker.Port(p.cfg.Port(), "5432")
+	docker.Port(p.cfg.Port(), gxcfg.PostgresDefaultPost)
 	docker.EnvironmentVariable("POSTGRES_USER=" + p.cfg.Username())
 
 	if hdd {
