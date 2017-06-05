@@ -6,7 +6,6 @@ import (
 	"github.com/maprost/gox/internal/log"
 	"github.com/maprost/gox/internal/shell"
 	"io/ioutil"
-	"os"
 )
 
 func GoDep() error {
@@ -20,6 +19,8 @@ func CompileInDocker() error {
 
 	// add project
 	dock.Value(cfg.FullProjectPath, cfg.Docker.ProjectPath)
+
+	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
 		" && go fmt ./..." +
 		" && go build -o " + BinaryName() +
@@ -39,15 +40,28 @@ func CompileBinary() (err error) {
 	return
 }
 
-func TestInDocker() error {
+func TestInDocker(cfgFile string) error {
 	cfg := gxcfg.GetConfig()
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
 	// add project
 	dock.Value(cfg.FullProjectPath, cfg.Docker.ProjectPath)
-	dock.Execute("cd " + cfg.Docker.ProjectPath + " && touch " + gxcfg.FileInsideDockerContainer + " && go test ./...")
+
+	// add database
+	for _, db := range cfg.Database {
+		dock.Link(db.Docker.Container, db.Docker.Container)
+	}
+
+	// add command TODO add used cfg file
+	dock.Execute("cd " + cfg.Docker.ProjectPath +
+		" && touch " + gxcfg.FileInsideDockerContainer +
+		" && chmod o+w " + gxcfg.FileInsideDockerContainer +
+		" && go test ./... -args -file=" + cfgFile)
 
 	_, err := dock.Run()
+
+	shell.Command(log.LevelDebug, "rm", gxcfg.FileInsideDockerContainer)
+
 	return err
 }
 
@@ -60,13 +74,18 @@ func BuildDockerImage(cfgFile string) error {
 	}
 
 	fileContent := "From " + cfg.Docker.Image + "\n\n" +
-		"ADD " + BinaryName() + " " + cfg.Docker.ProjectPath + "\n\n" +
-		"ADD " + cfgFile + " " + cfg.Docker.ProjectPath + "\n\n" +
-		"RUN touch " + cfg.Docker.ProjectPath + "/" + gxcfg.FileInsideDockerContainer
-	// add volume
+		"COPY " + BinaryName() + " " + cfg.Docker.ProjectPath + "\n\n" +
+		"COPY " + cfgFile + " " + cfg.Docker.ProjectPath + "\n\n" +
+		"RUN touch " + gxcfg.FileInsideDockerContainer + " && mv " + gxcfg.FileInsideDockerContainer + " " + cfg.Docker.ProjectPath + " \n\n"
 
-	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + "]" + "\n"
-	err = ioutil.WriteFile("DockerFile", []byte(fileContent), os.ModeType)
+	// add volume
+	for _, v := range cfg.Docker.Volumes {
+		fileContent += "COPY " + v + " " + cfg.Docker.ProjectPath + "/" + v + "\n\n"
+	}
+
+	// add entry point TODO add used cfg file
+	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + "\"]" + "\n"
+	err = ioutil.WriteFile("DockerFile", []byte(fileContent), 0644)
 	if err != nil {
 		return err
 	}
@@ -75,7 +94,7 @@ func BuildDockerImage(cfgFile string) error {
 	return err
 }
 
-func Run(profile string) error {
+func RunScript() error {
 	return nil
 }
 

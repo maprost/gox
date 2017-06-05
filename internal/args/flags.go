@@ -2,6 +2,7 @@ package args
 
 import (
 	"flag"
+	"github.com/maprost/gox/gxarg"
 )
 
 type DebugFlag struct {
@@ -17,7 +18,7 @@ type FileFlag struct {
 }
 
 func (ff *FileFlag) DefineFlag(fs *flag.FlagSet) {
-	fs.StringVar(&ff.File, "file", "local.gx", "Path for config file.")
+	gxarg.FileFlagVar(&ff.File, fs)
 }
 
 type HddFlag struct {

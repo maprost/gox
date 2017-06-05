@@ -30,7 +30,7 @@ func (cmd *buildCommand) DefineFlags(fs *flag.FlagSet) {
 
 func (cmd *buildCommand) Run() {
 	cmd.baseCommand.init(false)
-	log.Info("CompileInDocker go project.")
+	log.Info("Compile go project.")
 	var err error
 
 	if cmd.godep {
@@ -56,7 +56,7 @@ func (cmd *buildCommand) Run() {
 	checkFatalAndDeleteBinary(err, "Can't run databases: ")
 
 	// test (golang test)
-	err = golang.TestInDocker()
+	err = golang.TestInDocker(cmd.file.File)
 	checkFatalAndDeleteBinary(err, "Can't run tests: ")
 
 	// remove test container
@@ -66,4 +66,11 @@ func (cmd *buildCommand) Run() {
 	// build docker images
 	err = golang.BuildDockerImage(cmd.baseCommand.file.File)
 	checkFatalAndDeleteBinary(err, "Can't build docker image: ")
+
+	if cmd.script {
+		// create run script
+		err := golang.RunScript()
+		checkFatalAndDeleteBinary(err, "Can't create run script: ")
+	}
+
 }

@@ -8,13 +8,12 @@ import (
 )
 
 func main() {
+
 	start := time.Now()
 	args.Parse(
 		internal.InitCommand(),
 		internal.BuildCommand(),
 		internal.BinRunCommand(),
-		internal.RunCommand(),
-		internal.StopCommand(),
 		internal.StatCommand(),
 	)
 
