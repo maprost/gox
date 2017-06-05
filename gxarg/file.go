@@ -2,20 +2,22 @@ package gxarg
 
 import "flag"
 
-func File() *string {
-	return FileFlag(flag.CommandLine)
+const Cfg = "cfg"
+
+func ConfigFile() *string {
+	return ConfigFileFlag(flag.CommandLine)
 }
 
-func FileVar(file *string) {
-	FileFlagVar(file, flag.CommandLine)
+func ConfigFileVar(file *string) {
+	ConfigFileFlagVar(file, flag.CommandLine)
 }
 
-func FileFlag(fs *flag.FlagSet) *string {
+func ConfigFileFlag(fs *flag.FlagSet) *string {
 	var result *string
-	FileFlagVar(result, fs)
+	ConfigFileFlagVar(result, fs)
 	return result
 }
 
-func FileFlagVar(file *string, fs *flag.FlagSet) {
-	fs.StringVar(file, "file", "local.gx", "Path for config file.")
+func ConfigFileFlagVar(file *string, fs *flag.FlagSet) {
+	fs.StringVar(file, Cfg, "local.gx", "Path for config file.")
 }

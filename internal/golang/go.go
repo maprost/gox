@@ -1,6 +1,7 @@
 package golang
 
 import (
+	"github.com/maprost/gox/gxarg"
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/docker"
 	"github.com/maprost/gox/internal/log"
@@ -56,7 +57,7 @@ func TestInDocker(cfgFile string) error {
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
 		" && touch " + gxcfg.FileInsideDockerContainer +
 		" && chmod o+w " + gxcfg.FileInsideDockerContainer +
-		" && go test ./... -args -file=" + cfgFile)
+		" && go test -cover ./... -args -" + gxarg.Cfg + "=" + cfgFile)
 
 	_, err := dock.Run()
 
@@ -84,7 +85,7 @@ func BuildDockerImage(cfgFile string) error {
 	}
 
 	// add entry point TODO add used cfg file
-	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + "\"]" + "\n"
+	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + " -" + gxarg.Cfg + "=" + cfgFile + "\"]" + "\n"
 	err = ioutil.WriteFile("DockerFile", []byte(fileContent), 0644)
 	if err != nil {
 		return err

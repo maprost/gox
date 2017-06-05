@@ -18,7 +18,7 @@ type FileFlag struct {
 }
 
 func (ff *FileFlag) DefineFlag(fs *flag.FlagSet) {
-	gxarg.FileFlagVar(&ff.File, fs)
+	gxarg.ConfigFileFlagVar(&ff.File, fs)
 }
 
 type HddFlag struct {
