@@ -1,16 +1,19 @@
 package golang
 
 import (
+	"io/ioutil"
+
 	"github.com/maprost/gox/gxarg"
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/docker"
-	"github.com/maprost/gox/internal/log"
 	"github.com/maprost/gox/internal/shell"
-	"io/ioutil"
 )
 
 func GoDep() error {
-	_, err := shell.Command(log.LevelInfo, "godep", "save", "./...")
+	// delete vendor + GeDep directory
+	//shell.Command()
+
+	_, err := shell.Command("godep", "save", "./...")
 	return err
 }
 
@@ -32,12 +35,12 @@ func CompileInDocker() error {
 }
 
 func CompileBinary() (err error) {
-	_, err = shell.Command(log.LevelDebug, "go", "fmt", "./...")
+	_, err = shell.Command("go", "fmt", "./...")
 	if err != nil {
 		return
 	}
 
-	_, err = shell.Stream(log.LevelInfo, "go", "build")
+	_, err = shell.Stream("go", "build")
 	return
 }
 
@@ -53,7 +56,7 @@ func TestInDocker(cfgFile string) error {
 		dock.Link(db.Docker.Container, db.Docker.Container)
 	}
 
-	// add command TODO add used cfg file
+	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
 		" && touch " + gxcfg.FileInsideDockerContainer +
 		" && chmod o+w " + gxcfg.FileInsideDockerContainer +
@@ -61,7 +64,7 @@ func TestInDocker(cfgFile string) error {
 
 	_, err := dock.Run()
 
-	shell.Command(log.LevelDebug, "rm", gxcfg.FileInsideDockerContainer)
+	shell.Command("rm", gxcfg.FileInsideDockerContainer)
 
 	return err
 }
@@ -84,18 +87,26 @@ func BuildDockerImage(cfgFile string) error {
 		fileContent += "COPY " + v + " " + cfg.Docker.ProjectPath + "/" + v + "\n\n"
 	}
 
-	// add entry point TODO add used cfg file
+	// add entry point
 	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + " -" + gxarg.Cfg + "=" + cfgFile + "\"]" + "\n"
 	err = ioutil.WriteFile("DockerFile", []byte(fileContent), 0644)
 	if err != nil {
 		return err
 	}
 
-	_, err = shell.Stream(log.LevelInfo, "docker", "build", "-t", cfg.Docker.Container, "-f", "./DockerFile", ".")
+	_, err = shell.Stream("docker", "build", "-t", cfg.Docker.Container, "-f", "./DockerFile", ".")
 	return err
 }
 
 func RunScript() error {
+	//cfg := gxcfg.GetConfig()
+
+	// stop databases
+
+	// run databases (hdd=true)
+
+	// run project
+
 	return nil
 }
 
@@ -105,6 +116,10 @@ func RemoveDockerContainer() error {
 
 func PullDockerImage() error {
 	return docker.Pull(gxcfg.GetConfig().Docker.Image)
+}
+
+func GxBinaryName() string {
+	return gxcfg.GetConfig().Name + "_gx"
 }
 
 func BinaryName() string {

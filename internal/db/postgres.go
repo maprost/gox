@@ -54,7 +54,7 @@ func (p *postgres) createDatabase() (err error) {
 
 	log.Info("Postgres is running...")
 
-	out, err := docker.Execute(log.LevelDebug, p.cfg.Docker.Container,
+	out, err := docker.Execute(p.cfg.Docker.Container,
 		"su postgres --command 'psql -l | grep "+p.cfg.Database()+"'")
 	if err != nil {
 		return
@@ -64,7 +64,7 @@ func (p *postgres) createDatabase() (err error) {
 	if out == "" {
 		log.Info("Create database '", p.cfg.Database(), "'...")
 
-		_, err = docker.Execute(log.LevelDebug, p.cfg.Docker.Container,
+		_, err = docker.Execute(p.cfg.Docker.Container,
 			"su postgres --command 'createdb -O postgres "+p.cfg.Database()+"'")
 	}
 
@@ -75,7 +75,7 @@ func (p *postgres) checkAvailability() error {
 	log.Info("Checking Postgres availability...")
 
 	for {
-		out, err := docker.Execute(log.LevelDebug, p.cfg.Docker.Container, "ps aux | grep 'postgres' | grep 'docker-entrypoint.sh' | grep -v 'grep'")
+		out, err := docker.Execute(p.cfg.Docker.Container, "ps aux | grep 'postgres' | grep 'docker-entrypoint.sh' | grep -v 'grep'")
 		if err != nil {
 			return err
 		}

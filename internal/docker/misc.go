@@ -9,7 +9,7 @@ import (
 
 func Pull(image string) error {
 	log.Info("Pull image: ", image)
-	_, err := shell.Stream(log.LevelDebug, "docker", "pull", image)
+	_, err := shell.Stream("docker", "pull", image)
 	return err
 }
 
@@ -17,7 +17,7 @@ func StopAndRemove(container string) error {
 	log.Info("Stopping: ", container)
 
 	// check if the container is there
-	id, err := shell.Stream(log.LevelDebug, "docker", "ps", "-a", "-q", "-f", "name="+container)
+	id, err := shell.Stream("docker", "ps", "-a", "-q", "-f", "name="+container)
 	if err != nil {
 		return err
 	}
@@ -28,13 +28,13 @@ func StopAndRemove(container string) error {
 	}
 
 	// remove the container
-	_, err = shell.Command(log.LevelInfo, "docker", "rm", "-f", "-v", container)
+	_, err = shell.Command("docker", "rm", "-f", "-v", container)
 	return err
 }
 
 func RemoveImage(image string) error {
 	// check if the container is there
-	id, err := shell.Stream(log.LevelDebug, "docker", "images", image, "-q")
+	id, err := shell.Stream("docker", "images", image, "-q")
 	if err != nil {
 		return err
 	}
@@ -45,12 +45,12 @@ func RemoveImage(image string) error {
 	}
 
 	log.Info("Remove Image: ", image)
-	_, err = shell.Command(log.LevelInfo, "docker", "rmi", "-f", image)
+	_, err = shell.Command("docker", "rmi", "-f", image)
 	return err
 }
 
 func RemoveUnusedImages() error {
-	images, err := shell.Command(log.LevelDebug, "docker", "images", "-q", "-f", "dangling=true")
+	images, err := shell.Command("docker", "images", "-q", "-f", "dangling=true")
 	if err != nil {
 		return err
 	}
@@ -67,8 +67,8 @@ func RemoveUnusedImages() error {
 	return nil
 }
 
-func Execute(logLevel log.Level, container string, cmd string) (string, error) {
-	return shell.Command(logLevel, "docker", "exec", container, "/bin/sh", "-c", cmd)
+func Execute(container string, cmd string) (string, error) {
+	return shell.Command("docker", "exec", container, "/bin/sh", "-c", cmd)
 }
 
 //def get_version():

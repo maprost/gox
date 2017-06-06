@@ -8,8 +8,8 @@ import (
 	"os/exec"
 )
 
-func Command(logLevel log.Level, cmdName string, cmdArgs ...string) (string, error) {
-	log.Print(logLevel, append([]string{cmdName}, cmdArgs...))
+func Command(cmdName string, cmdArgs ...string) (string, error) {
+	log.Debug(append([]string{cmdName}, cmdArgs...))
 	cmd := exec.Command(cmdName, cmdArgs...)
 
 	var out bytes.Buffer
@@ -22,8 +22,8 @@ func Command(logLevel log.Level, cmdName string, cmdArgs ...string) (string, err
 	return evalOutput(out.String(), stderr.String(), err)
 }
 
-func Stream(logLevel log.Level, cmdName string, cmdArgs ...string) (string, error) {
-	log.Print(logLevel, append([]string{cmdName}, cmdArgs...))
+func Stream(cmdName string, cmdArgs ...string) (string, error) {
+	log.Debug(append([]string{cmdName}, cmdArgs...))
 	cmd := exec.Command(cmdName, cmdArgs...)
 
 	var out string
