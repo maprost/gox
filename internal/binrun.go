@@ -49,3 +49,10 @@ func (cmd *binRunCommand) Run() {
 	checkFatalAndDeleteBinary(err, "Can't run tests: ")
 
 }
+
+func checkFatalAndDeleteBinary(err error, msg string) {
+	if err != nil {
+		shell.Command("rm", golang.BinaryName())
+		log.Fatal(msg, err.Error())
+	}
+}

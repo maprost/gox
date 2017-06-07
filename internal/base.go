@@ -49,17 +49,3 @@ func checkFatal(err error, msg string) {
 		log.Fatal(msg, err.Error())
 	}
 }
-
-func checkFatalAndDeleteGxBinary(err error, msg string) {
-	if err != nil {
-		shell.Command("rm", golang.BinaryGxName())
-		log.Fatal(msg, err.Error())
-	}
-}
-
-func checkFatalAndDeleteBinary(err error, msg string) {
-	if err != nil {
-		shell.Command("rm", golang.BinaryName())
-		log.Fatal(msg, err.Error())
-	}
-}

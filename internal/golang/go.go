@@ -32,8 +32,8 @@ func CompileInDocker() error {
 	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
 		" && go fmt ./..." +
-		" && go build -o " + BinaryName() +
-		" && chmod o+w " + BinaryName())
+		" && go build -o " + BinaryGxName() +
+		" && chmod o+w " + BinaryGxName())
 
 	_, err = dock.Run(log.LevelInfo)
 	if err != nil {
@@ -49,7 +49,7 @@ func CompileBinary() (err error) {
 		return
 	}
 
-	_, err = shell.Stream(log.LevelInfo, "go", "build")
+	_, err = shell.Stream(log.LevelInfo, "go", "build -o "+BinaryName())
 	return
 }
 
@@ -99,7 +99,7 @@ func BuildDockerImage(cfgFile string) error {
 	}
 
 	fileContent := "From " + cfg.Docker.Image + "\n\n" +
-		"COPY " + BinaryName() + " " + cfg.Docker.ProjectPath + "\n\n" +
+		"COPY " + BinaryGxName() + " " + cfg.Docker.ProjectPath + "\n\n" +
 		"COPY " + cfgFile + " " + cfg.Docker.ProjectPath + "\n\n" +
 		"RUN touch " + gxcfg.FileInsideDockerContainer + " && mv " + gxcfg.FileInsideDockerContainer + " " + cfg.Docker.ProjectPath + " \n\n"
 
@@ -109,7 +109,7 @@ func BuildDockerImage(cfgFile string) error {
 	}
 
 	// add entry point TODO add used cfg file
-	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryName() + " -" + gxarg.Cfg + "=" + cfgFile + "\"]" + "\n"
+	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryGxName() + " -" + gxarg.Cfg + "=" + cfgFile + "\"]" + "\n"
 	err = ioutil.WriteFile("DockerFile", []byte(fileContent), 0644)
 	if err != nil {
 		return err

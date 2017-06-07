@@ -5,10 +5,26 @@
 GoX is a go tool, to build and run your go server application in a docker container.
 
 ## Actions
-- init all dependencies in docker for your test environment (IntelliJ) (`gox init`)
-- compile and test (init therefore all dependencies) your go server application in a docker container and create a docker image (`gox build`)
-- run your docker image + dependencies (`gox run`)
-- see all states of your docker container/images (`gox stat`)
+### `gox init` / `gox`
+- init all dependencies in docker container for your test environment 
+    - it's mainly to run your tests in IntelliJ or at the terminal
+
+### `gox build`
+1. run `godep [save|update] ./...`, if activated (`-godep`)
+1. compile your project in a docker container
+1. test your project in a docker container (therefor init all dependencies)
+1. build docker image
+1. build a run script, if activated (`-script`)
+
+### `gox binrun`
+1. build a binary of your project
+1. init all dependencies, if not deactivated (`-fast`)
+1. run the binary
+
+### `gox stat`
+- see all states of your docker container/images
+- pull (`-pull`)
+- clean (`-clean`)
 
 ## Supported Databases
 - Postgres
