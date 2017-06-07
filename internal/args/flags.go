@@ -9,22 +9,22 @@ type DebugFlag struct {
 	DebugFlag bool
 }
 
-func (df *DebugFlag) Define() {
-	flag.BoolVar(&df.DebugFlag, "d", false, "Show debug logs")
+func (df *DebugFlag) DefineFlag(fs *flag.FlagSet) {
+	fs.BoolVar(&df.DebugFlag, "d", false, "Show debug logs")
 }
 
 type FileFlag struct {
 	File string
 }
 
-func (ff *FileFlag) Define() {
-	gxarg.ConfigFileVar(&ff.File)
+func (ff *FileFlag) DefineFlag(fs *flag.FlagSet) {
+	gxarg.ConfigFileFlagVar(&ff.File, fs)
 }
 
 type HddFlag struct {
 	Hdd bool
 }
 
-func (hf *HddFlag) Define() {
-	flag.BoolVar(&hf.Hdd, "hdd", false, "Use a persisted storage for database.")
+func (hf *HddFlag) DefineFlag(fs *flag.FlagSet) {
+	fs.BoolVar(&hf.Hdd, "hdd", false, "Use a persisted storage for database.")
 }

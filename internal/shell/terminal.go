@@ -22,7 +22,7 @@ func Command(cmdName string, cmdArgs ...string) (string, error) {
 	return evalOutput(out.String(), stderr.String(), err)
 }
 
-func Stream(cmdName string, cmdArgs ...string) (string, error) {
+func Stream(logLevel log.Level, cmdName string, cmdArgs ...string) (string, error) {
 	log.Debug(append([]string{cmdName}, cmdArgs...))
 	cmd := exec.Command(cmdName, cmdArgs...)
 
@@ -37,7 +37,7 @@ func Stream(cmdName string, cmdArgs ...string) (string, error) {
 		for stdoutScanner.Scan() {
 			txt := stdoutScanner.Text()
 			out += txt
-			log.Info(txt)
+			log.Print(logLevel, txt)
 		}
 	}()
 

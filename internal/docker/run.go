@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"github.com/maprost/gox/internal/log"
 	"github.com/maprost/gox/internal/shell"
 )
 
@@ -60,7 +61,7 @@ func (d *RunBuilder) Run() (string, error) {
 	cmd = append(cmd, d.image)
 	cmd = append(cmd, d.args...)
 
-	return shell.Stream("docker", cmd...)
+	return shell.Stream(log.LevelInfo, "docker", cmd...)
 }
 
 func (d *RunBuilder) appendDockerArgs(args ...string) {

@@ -1,6 +1,2 @@
 *.iml
 .idea
-cmd/gox-binrun/gox-binrun
-cmd/gox-build/gox-build
-cmd/gox-init/gox-init
-cmd/gox-stat/gox-stat

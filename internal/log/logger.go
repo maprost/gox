@@ -43,9 +43,3 @@ func Print(logLevel Level, args ...interface{}) {
 		os.Exit(1)
 	}
 }
-
-func CheckFatal(err error, msg string) {
-	if err != nil {
-		Fatal(msg, err.Error())
-	}
-}

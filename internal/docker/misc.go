@@ -9,7 +9,7 @@ import (
 
 func Pull(image string) error {
 	log.Info("Pull image: ", image)
-	_, err := shell.Stream("docker", "pull", image)
+	_, err := shell.Stream(log.LevelDebug, "docker", "pull", image)
 	return err
 }
 
@@ -17,7 +17,7 @@ func StopAndRemove(container string) error {
 	log.Info("Stopping: ", container)
 
 	// check if the container is there
-	id, err := shell.Stream("docker", "ps", "-a", "-q", "-f", "name="+container)
+	id, err := shell.Stream(log.LevelDebug, "docker", "ps", "-a", "-q", "-f", "name="+container)
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func StopAndRemove(container string) error {
 
 func RemoveImage(image string) error {
 	// check if the container is there
-	id, err := shell.Stream("docker", "images", image, "-q")
+	id, err := shell.Stream(log.LevelDebug, "docker", "images", image, "-q")
 	if err != nil {
 		return err
 	}
