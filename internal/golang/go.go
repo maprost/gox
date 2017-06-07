@@ -10,12 +10,20 @@ import (
 )
 
 func GoDep() error {
+	// TODO: check if vendor or GoDep folder are available -> if yes try godep update ./... else godep save ./...
+
 	_, err := shell.Command("godep", "save", "./...")
 	return err
 }
 
 func CompileInDocker() error {
+	err := RemoveDockerContainer()
+	if err != nil {
+		return err
+	}
+
 	cfg := gxcfg.GetConfig()
+	log.Info("Build project ", cfg.Name, " in docker container.")
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
 	// add project
@@ -27,8 +35,12 @@ func CompileInDocker() error {
 		" && go build -o " + BinaryName() +
 		" && chmod o+w " + BinaryName())
 
-	_, err := dock.Run()
-	return err
+	_, err = dock.Run(log.LevelInfo)
+	if err != nil {
+		return err
+	}
+
+	return RemoveDockerContainer()
 }
 
 func CompileBinary() (err error) {
@@ -42,7 +54,14 @@ func CompileBinary() (err error) {
 }
 
 func TestInDocker(cfgFile string) error {
+	err := RemoveDockerContainer()
+	if err != nil {
+		return err
+	}
+
 	cfg := gxcfg.GetConfig()
+	log.Info("Test project ", cfg.Name, " in docker container.")
+
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
 	// add project
@@ -59,15 +78,20 @@ func TestInDocker(cfgFile string) error {
 		" && chmod o+w " + gxcfg.FileInsideDockerContainer +
 		" && go test -cover ./... -args -" + gxarg.Cfg + "=" + cfgFile)
 
-	_, err := dock.Run()
+	_, err = dock.Run(log.LevelInfo)
+	defer func() {
+		shell.Command("rm", gxcfg.FileInsideDockerContainer)
+	}()
+	if err != nil {
+		return err
+	}
 
-	shell.Command("rm", gxcfg.FileInsideDockerContainer)
-
-	return err
+	return RemoveDockerContainer()
 }
 
 func BuildDockerImage(cfgFile string) error {
 	cfg := gxcfg.GetConfig()
+	log.Info("Build docker image: ", cfg.Docker.Container)
 
 	err := docker.RemoveImage(cfg.Docker.Container)
 	if err != nil {
@@ -95,7 +119,7 @@ func BuildDockerImage(cfgFile string) error {
 	return err
 }
 
-func RunScript() error {
+func CreateRunScript() error {
 	return nil
 }
 
@@ -107,8 +131,12 @@ func PullDockerImage() error {
 	return docker.Pull(gxcfg.GetConfig().Docker.Image)
 }
 
+func BinaryGxName() string {
+	return BinaryName() + "_gx"
+}
+
 func BinaryName() string {
-	return gxcfg.GetConfig().Name + "_gx"
+	return gxcfg.GetConfig().Name
 }
 
 func runDockerCommand(docker docker.RunBuilder, command string) {

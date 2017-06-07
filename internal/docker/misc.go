@@ -14,8 +14,6 @@ func Pull(image string) error {
 }
 
 func StopAndRemove(container string) error {
-	log.Info("Stopping: ", container)
-
 	// check if the container is there
 	id, err := shell.Stream(log.LevelDebug, "docker", "ps", "-a", "-q", "-f", "name="+container)
 	if err != nil {
@@ -27,6 +25,7 @@ func StopAndRemove(container string) error {
 		return nil
 	}
 
+	log.Info("Stopping docker container ", container)
 	// remove the container
 	_, err = shell.Command("docker", "rm", "-f", "-v", container)
 	return err

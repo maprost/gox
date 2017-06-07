@@ -30,7 +30,7 @@ func (p *postgres) Run(hdd bool) (err error) {
 		docker.Value(p.cfg.Docker.DiscSpace, "/var/lib/postgresql/data/")
 	}
 
-	_, err = docker.Run()
+	_, err = docker.Run(log.LevelDebug)
 	if err != nil {
 		return
 	}

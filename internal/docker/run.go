@@ -55,13 +55,13 @@ func (d *RunBuilder) Execute(args ...string) *RunBuilder {
 }
 
 // Run the docker shell
-func (d *RunBuilder) Run() (string, error) {
+func (d *RunBuilder) Run(logLevel log.Level) (string, error) {
 	cmd := []string{}
 	cmd = append(cmd, d.dockerArgs...)
 	cmd = append(cmd, d.image)
 	cmd = append(cmd, d.args...)
 
-	return shell.Stream(log.LevelInfo, "docker", cmd...)
+	return shell.Stream(logLevel, "docker", cmd...)
 }
 
 func (d *RunBuilder) appendDockerArgs(args ...string) {

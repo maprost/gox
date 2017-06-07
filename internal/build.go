@@ -3,9 +3,11 @@ package internal
 import (
 	"flag"
 
+	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
 	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
+	"time"
 )
 
 type buildCommand struct {
@@ -29,8 +31,14 @@ func (cmd *buildCommand) DefineFlags(fs *flag.FlagSet) {
 }
 
 func (cmd *buildCommand) Run() {
+	start := time.Now()
+	defer func() {
+		duration := time.Now().Sub(start)
+		log.Info("Build duration: ", duration.String())
+	}()
+
 	cmd.baseCommand.init(false)
-	log.Info("Compile go project.")
+	log.Info("Build go project: " + gxcfg.GetConfig().Name)
 	var err error
 
 	if cmd.godep {
@@ -39,38 +47,26 @@ func (cmd *buildCommand) Run() {
 		checkFatal(err, "Can't run godep: ")
 	}
 
-	// remove old container
-	err = golang.RemoveDockerContainer()
-	checkFatal(err, "Can't remove old container: ")
-
 	// build (golang build)
 	err = golang.CompileInDocker()
 	checkFatal(err, "Can't compile: ")
 
-	// remove build container
-	err = golang.RemoveDockerContainer()
-	checkFatalAndDeleteBinary(err, "Can't remove old container: ")
-
 	// start databases
 	err = startDatabases(false)
-	checkFatalAndDeleteBinary(err, "Can't run databases: ")
+	checkFatalAndDeleteGxBinary(err, "Can't run databases: ")
 
 	// test (golang test)
 	err = golang.TestInDocker(cmd.file.File)
-	checkFatalAndDeleteBinary(err, "Can't run tests: ")
-
-	// remove test container
-	err = golang.RemoveDockerContainer()
-	checkFatalAndDeleteBinary(err, "Can't remove old container: ")
+	checkFatalAndDeleteGxBinary(err, "Can't run tests: ")
 
 	// build docker images
 	err = golang.BuildDockerImage(cmd.baseCommand.file.File)
-	checkFatalAndDeleteBinary(err, "Can't build docker image: ")
+	checkFatalAndDeleteGxBinary(err, "Can't build docker image: ")
 
 	if cmd.script {
 		// create run script
-		err := golang.RunScript()
-		checkFatalAndDeleteBinary(err, "Can't create run script: ")
+		err := golang.CreateRunScript()
+		checkFatalAndDeleteGxBinary(err, "Can't create run script: ")
 	}
 
 }

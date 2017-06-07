@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/maprost/gox/internal/docker"
+	"github.com/maprost/gox/internal/log"
 )
 
 func TestPull(t *testing.T) {
@@ -21,7 +22,7 @@ func TestStopAndRemove(t *testing.T) {
 	assert.Nil(err)
 
 	run := docker.NewRunBuilder("TestStopAndRemove", "hello-world")
-	_, err = run.Run()
+	_, err = run.Run(log.LevelInfo)
 	assert.Nil(err)
 
 	err = docker.StopAndRemove("TestStopAndRemove")
