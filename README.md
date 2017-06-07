@@ -38,14 +38,6 @@ GoX is a go tool, to build and run your go server application in a docker contai
 - docker
 - godep
 
-## Usage
-1. put the *.gox file into your project root folder
-    1. e.g.: ~/go/src/github.com/maprost/gox
-1. in this folder will take place the most action
-    1. godep save -> creating the vendor folder (in root folder)
-    1. Compiling the code (inside docker)
-    1. Test the system (inside docker)
-    1. Create the docker image (in root folder)
     
 ## Config
 ```go
