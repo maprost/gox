@@ -37,7 +37,7 @@ GoX is a go tool, to build and run your go server application in a docker contai
 ## Dependencies
 - docker
 - godep
-
+- golint
     
 ## Config
 ```go

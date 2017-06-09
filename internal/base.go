@@ -6,9 +6,7 @@ import (
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
 	"github.com/maprost/gox/internal/db"
-	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
-	"github.com/maprost/gox/internal/shell"
 )
 
 type baseCommand struct {

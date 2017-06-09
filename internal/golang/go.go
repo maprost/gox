@@ -9,13 +9,6 @@ import (
 	"io/ioutil"
 )
 
-func GoDep() error {
-	// TODO: check if vendor or GoDep folder are available -> if yes try godep update ./... else godep save ./...
-
-	_, err := shell.Command("godep", "save", "./...")
-	return err
-}
-
 func CompileInDocker() error {
 	err := RemoveDockerContainer()
 	if err != nil {
@@ -31,7 +24,10 @@ func CompileInDocker() error {
 
 	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
-		" && go fmt ./..." +
+		" && echo 'go fmt' && go fmt ./..." +
+		" && echo 'go vet' && go vet ./..." +
+		" && echo 'golint' && go get -u github.com/golang/lint/golint" +
+		" && golint $(go list ./... | grep -v /vendor/)" +
 		" && go build -o " + BinaryGxName() +
 		" && chmod o+w " + BinaryGxName())
 

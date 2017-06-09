@@ -52,19 +52,19 @@ func createConfig(filename string, configSearch bool) (conf Config, err error) {
 		entry := Database{}
 
 		if dbPortFactory(db.Driver) == unknownDriver {
-			errors.New("Unknown driver found, can't proceed, driver is mandatory.")
+			err = errors.New("Unknown driver found, can't proceed, driver is mandatory.")
 			return
 		}
 		entry.driver = db.Driver
 
 		if db.Dbname == "" {
-			errors.New("Empty db name found, can't proceed, db name is mandatory.")
+			err = errors.New("Empty db name found, can't proceed, db name is mandatory.")
 			return
 		}
 		entry.dbname = db.Dbname
 
 		if db.User == "" {
-			errors.New("Empty user name found, can't proceed, user is mandatory.")
+			err = errors.New("Empty user name found, can't proceed, user is mandatory.")
 			return
 		}
 		entry.user = db.User
