@@ -48,7 +48,7 @@ func (cmd *buildCommand) Run() {
 		checkFatal(err, "Can't run godep: ")
 	}
 
-	err = golang.GoLint()
+	err = golang.CheckStyle()
 	checkFatal(err, "")
 
 	// build (golang build)
