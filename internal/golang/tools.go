@@ -10,7 +10,7 @@ import (
 )
 
 func GoDep() error {
-	out, err := shell.Command("ll")
+	out, err := shell.Stream(log.LevelDebug, "ls")
 	if err != nil {
 		return err
 	}
