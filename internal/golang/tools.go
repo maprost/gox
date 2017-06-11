@@ -9,11 +9,16 @@ import (
 	"strings"
 )
 
-func GoDep() error {
-	// TODO: check if vendor or GoDep folder are available -> if yes try godep update ./... else godep save ./...
+func GoDep() (err error) {
+	err = RemoveDockerContainer()
+	if err != nil {
+		return
+	}
+
+	// check if vendor directory exists
 	out, err := shell.Command("ll")
 	if err != nil {
-		return err
+		return
 	}
 
 	action := "save"
@@ -21,7 +26,23 @@ func GoDep() error {
 		action = "update"
 	}
 
-	_, err = shell.Command("godep", action, "./...")
+	cfg := gxcfg.GetConfig()
+	log.Info("Run godep for project ", cfg.Name, " in docker container.")
+	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
+
+	// add project
+	dock.Value(cfg.FullProjectPath, cfg.Docker.ProjectPath)
+
+	// add command
+	dock.Execute("cd " + cfg.Docker.ProjectPath +
+		" && go get -u github.com/tools/godep && godep " + action + " ./...")
+
+	out, err = dock.Run(log.LevelDebug)
+	if err != nil {
+		return err
+	}
+
+	err = RemoveDockerContainer()
 	return err
 }
 
@@ -40,9 +61,8 @@ func GoLint() error {
 
 	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
-		" && echo 'golint' && go get -u github.com/golang/lint/golint" +
-		" && golint $(go list ./... | grep -v /vendor/)" +
-		" && echo 'go vet' && go vet ./...")
+		" && echo 'golint' && go get -u github.com/golang/lint/golint && golint $(go list ./... | grep -v /vendor/)" +
+		" && echo 'go vet' && go vet $(go list ./... | grep -v /vendor/)")
 
 	out, err := dock.Run(log.LevelInfo)
 	if err != nil {
