@@ -24,8 +24,6 @@ func CompileInDocker() error {
 
 	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
-		" && echo 'go fmt' && go fmt ./..." +
-		" && echo 'go vet' && go vet ./..." +
 		" && go build -o " + BinaryGxName() +
 		" && chmod o+w " + BinaryGxName())
 
