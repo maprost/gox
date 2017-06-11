@@ -7,6 +7,7 @@ import (
 	"github.com/maprost/gox/internal/args"
 	"github.com/maprost/gox/internal/db"
 	"github.com/maprost/gox/internal/log"
+	"github.com/maprost/gox/internal/shell"
 )
 
 type baseCommand struct {
@@ -26,8 +27,12 @@ func (cmd *baseCommand) init(configSearch bool) {
 		log.InitLogger(log.LevelInfo)
 	}
 
+	// check if docker is installed
+	_, err := shell.Command("docker", "--version")
+	checkFatal(err, "Can't run docker -version")
+
 	// load config file
-	err := gxcfg.InitConfig(cmd.file.File, configSearch)
+	err = gxcfg.InitConfig(cmd.file.File, configSearch)
 	checkFatal(err, "Can't init config: ")
 }
 

@@ -1,6 +1,6 @@
 [![GoDoc](https://godoc.org/github.com/maprost/gox/gxcfg?status.svg)](https://godoc.org/github.com/maprost/gox/gxcfg)
 
-# GoX (0.1 alpha)
+# GoX (0.3 alpha)
 
 GoX is a go tool, to build and run your go server application in a docker container.
 
@@ -8,9 +8,11 @@ GoX is a go tool, to build and run your go server application in a docker contai
 ### `gox init` / `gox`
 - init all dependencies in docker container for your test environment 
     - it's mainly to run your tests in IntelliJ or at the terminal
+- default behavior of `gox`. 
 
 ### `gox build`
-1. run `godep [save|update] ./...`, if activated (`-godep`)
+1. run `godep [save|update] ./...` in a docker container, if activated (`-godep`)
+1. check style with `go vet` and `golint` in a docker container
 1. compile your project in a docker container
 1. test your project in a docker container (therefor init all dependencies)
 1. build docker image
@@ -35,9 +37,9 @@ GoX is a go tool, to build and run your go server application in a docker contai
 - MongoDB
 
 ## Dependencies
-- docker
-- godep
-- golint
+- docker (has to be installed on the system)
+- godep (will be downloaded into a docker container and execute)
+- golint (will be downloaded into a docker container and execute)
     
 ## Config
 ```go

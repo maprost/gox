@@ -2,6 +2,7 @@ package gxcfg
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,6 +14,8 @@ func createConfig(filename string, configSearch bool) (conf Config, err error) {
 	if err != nil {
 		return
 	}
+
+	fmt.Printf("blob", "no")
 
 	// path config
 	conf.FullProjectPath, err = getFullProjectPath()
