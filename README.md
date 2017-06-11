@@ -4,6 +4,10 @@
 
 GoX is a go tool, to build and run your go server application in a docker container.
 
+## Install 
+
+`go get -u github.com/maprost/gox`
+
 ## Actions
 ### `gox init` / `gox`
 - init all dependencies in docker container for your test environment 
