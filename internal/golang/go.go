@@ -26,8 +26,6 @@ func CompileInDocker() error {
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
 		" && echo 'go fmt' && go fmt ./..." +
 		" && echo 'go vet' && go vet ./..." +
-		" && echo 'golint' && go get -u github.com/golang/lint/golint" +
-		" && golint $(go list ./... | grep -v /vendor/)" +
 		" && go build -o " + BinaryGxName() +
 		" && chmod o+w " + BinaryGxName())
 
@@ -133,33 +131,4 @@ func BinaryGxName() string {
 
 func BinaryName() string {
 	return gxcfg.GetConfig().Name
-}
-
-func runDockerCommand(docker docker.RunBuilder, command string) {
-
-	//docker.Value("")
-	//
-	//docker_run.value(base.path(0), "/go/%s" % self.property.path())
-	//docker_run.value("%s/project.json" % self.property.root_path(), "/go/project.json")
-	//docker_run.value("%s/bin" % self.property.root_path(), "/go/bin")
-	//
-	//# add dependencies
-	//for dep in self.property.dependencies():
-	//system_path = "%s/%s" % (self.property.root_path(), self.property.dependency_path(dep))
-	//docker_path = "/golang/%s" % self.property.dependency_path(dep)
-	//if self.property.is_dependency_type_service(dep):
-	//system_path += "/client"
-	//docker_path += "/client"
-	//
-	//docker_run.value(system_path, docker_path)
-	//
-	//docker_run.execute("cd /go/src/rpp.de/%s" % self.property.name() + " && " +
-	//	shell + " && echo 'go finish #Code445#'")
-	//build_output = docker_run.run()
-	//log.info(build_output)
-	//self.remove()
-	//
-	//# check if there is an error
-	//if "go finish #Code445#" not in build_output:
-	//exit(1)
 }

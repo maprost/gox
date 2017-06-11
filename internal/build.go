@@ -48,6 +48,9 @@ func (cmd *buildCommand) Run() {
 		checkFatal(err, "Can't run godep: ")
 	}
 
+	err = golang.GoLint()
+	checkFatal(err, "")
+
 	// build (golang build)
 	err = golang.CompileInDocker()
 	checkFatal(err, "Can't compile: ")
