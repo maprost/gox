@@ -13,8 +13,9 @@ import (
 
 type buildCommand struct {
 	baseCommand
-	godep  bool
-	script bool
+	godep          bool
+	script         bool
+	checkStyleFail bool
 }
 
 func BuildCommand() args.SubCommand {
@@ -28,7 +29,8 @@ func (cmd *buildCommand) Name() string {
 func (cmd *buildCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
 	fs.BoolVar(&cmd.godep, "godep", false, "do 'godep [save|update] ./...' before compiling")
-	fs.BoolVar(&cmd.godep, "script", false, "creates a shell script to run the docker image and all database docker container.")
+	fs.BoolVar(&cmd.script, "script", false, "creates a shell script to run the docker image and all database docker container.")
+	fs.BoolVar(&cmd.checkStyleFail, "style", false, "if check style has a warning, the build failed.")
 }
 
 func (cmd *buildCommand) Run() {
@@ -48,7 +50,7 @@ func (cmd *buildCommand) Run() {
 		checkFatal(err, "Can't run godep: ")
 	}
 
-	err = golang.CheckStyle()
+	err = golang.CheckStyle(cmd.checkStyleFail)
 	checkFatal(err, "")
 
 	// build (golang build)

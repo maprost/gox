@@ -24,7 +24,7 @@ func GoDep() error {
 	return err
 }
 
-func CheckStyle() error {
+func CheckStyle(checkStyleFail bool) error {
 	err := RemoveDockerContainer()
 	if err != nil {
 		return err
@@ -44,7 +44,8 @@ func CheckStyle() error {
 		" && echo 'gocyclo over 10' && go get github.com/fzipp/gocyclo && gocyclo -over 10 . | grep -v vendor/")
 
 	out, err := dock.Run(log.LevelInfo)
-	if err != nil {
+	// gocyclo return every time a 'exit status 1' error, but there is no error
+	if err != nil && err.Error() != "exit status 1" {
 		return err
 	}
 
@@ -53,7 +54,7 @@ func CheckStyle() error {
 		return err
 	}
 
-	if len(out) > 0 {
+	if checkStyleFail && len(out) > 0 {
 		return errors.New("Found some check styles.")
 	}
 

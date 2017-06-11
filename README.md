@@ -16,7 +16,10 @@ GoX is a go tool, to build and run your go server application in a docker contai
 
 ### `gox build`
 1. run `godep [save|update] ./...` in a docker container, if activated (`-godep`)
-1. check style with `go vet` and `golint` in a docker container
+1. check style in a docker container, build failed if `-checkfail` is activated
+    1. `go vet`
+    1. `golint`
+    1. `gocyclo`, check cyclomatic complexities of functions in Go source code (shouldn't be higher than 10)
 1. compile your project in a docker container
 1. test your project in a docker container (therefor init all dependencies)
 1. build docker image
@@ -44,6 +47,7 @@ GoX is a go tool, to build and run your go server application in a docker contai
 - docker (has to be installed on the system)
 - godep (has to be installed `go get github.com/tools/godep`)
 - golint (will be downloaded into a docker container and execute)
+- gocyclo (will be downloaded into a docker container and execute)
     
 ## Config
 ```go
