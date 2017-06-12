@@ -1,4 +1,5 @@
 [![GoDoc](https://godoc.org/github.com/maprost/gox/gxcfg?status.svg)](https://godoc.org/github.com/maprost/gox/gxcfg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/maprost/gox)](https://goreportcard.com/report/github.com/maprost/gox)
 
 # GoX (0.3 alpha)
 
@@ -6,7 +7,7 @@ GoX is a go tool, to build and run your go server application in a docker contai
 
 ## Install 
 
-`go get -u github.com/maprost/gox`
+`go get github.com/maprost/gox`
 
 ## Actions
 ### `gox init` / `gox`
@@ -15,7 +16,7 @@ GoX is a go tool, to build and run your go server application in a docker contai
 - default behavior of `gox`. 
 
 ### `gox build`
-1. run `godep [save|update] ./...` in a docker container, if activated (`-godep`)
+1. run `godep [save|update] ./...`, if activated (`-godep`)
 1. check style in a docker container, build failed if `-style` is activated and there are some check style warnings
     1. `go vet`
     1. `golint`
@@ -23,7 +24,7 @@ GoX is a go tool, to build and run your go server application in a docker contai
 1. compile your project in a docker container
 1. test your project in a docker container (therefor init all dependencies)
 1. build docker image
-1. build a run script, if activated (`-script`)
+1. build a docker compose file, if activated (`-compose`)
 
 ### `gox binrun`
 1. build a binary of your project
@@ -71,6 +72,6 @@ type config struct {
 			Discspace string // optional, for mode hdd mandatory
 		}
 	}
-	Clients map[string]string // optional
+	Property map[string]string // optional
 }
 ```

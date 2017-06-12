@@ -27,7 +27,7 @@ func createConfig(filename string, configSearch bool) (conf Config, err error) {
 	nameIndex := strings.LastIndex(conf.ProjectPath, "/")
 	conf.Name = conf.ProjectPath[nameIndex+1:]
 
-	conf.Clients = cfg.Clients
+	conf.Property = cfg.Property
 
 	// server docker config
 	conf.Docker.Image = cfg.Docker.Image

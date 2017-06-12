@@ -39,7 +39,6 @@ func CheckStyle(checkStyleFail bool) error {
 
 	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
-		" && echo 'go fmt' && go fmt ./..." +
 		" && echo 'golint' && go get -u github.com/golang/lint/golint && golint $(go list ./... | grep -v /vendor/)" +
 		" && echo 'go vet' && go vet $(go list ./... | grep -v /vendor/)" +
 		" && echo 'gocyclo over 10' && go get github.com/fzipp/gocyclo && gocyclo -over 10 . | grep -v vendor/")

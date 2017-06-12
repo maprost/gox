@@ -5,6 +5,7 @@ import (
 
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
+	"github.com/maprost/gox/internal/docker"
 	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
 	"github.com/maprost/gox/internal/shell"
@@ -14,7 +15,7 @@ import (
 type buildCommand struct {
 	baseCommand
 	godep          bool
-	script         bool
+	compose        bool
 	checkStyleFail bool
 }
 
@@ -29,7 +30,7 @@ func (cmd *buildCommand) Name() string {
 func (cmd *buildCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
 	fs.BoolVar(&cmd.godep, "godep", false, "do 'godep [save|update] ./...' before compiling")
-	fs.BoolVar(&cmd.script, "script", false, "creates a shell script to run the docker image and all database docker container.")
+	fs.BoolVar(&cmd.compose, "compose", false, "creates a docker compose yml file to run the docker image and all database docker container.")
 	fs.BoolVar(&cmd.checkStyleFail, "style", false, "if check style has a warning, the build failed.")
 }
 
@@ -69,10 +70,10 @@ func (cmd *buildCommand) Run() {
 	err = golang.BuildDockerImage(cmd.baseCommand.file.File)
 	checkFatalAndDeleteGxBinary(err, "Can't build docker image: ")
 
-	if cmd.script {
-		// create run script
-		err := golang.CreateRunScript()
-		checkFatalAndDeleteGxBinary(err, "Can't create run script: ")
+	if cmd.compose {
+		// create run compose
+		err := docker.ComposeScript()
+		checkFatalAndDeleteGxBinary(err, "Can't create docker compose yml file: ")
 	}
 
 	// delete binary

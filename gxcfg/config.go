@@ -55,7 +55,7 @@ type Config struct {
 
 		ProjectPath string // -> /go/src/github.com/maprost/gox
 	}
-	Clients map[string]string
+	Property map[string]string
 }
 
 var singleton *Config = nil

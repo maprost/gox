@@ -25,7 +25,7 @@ type config struct {
 			Discspace string // optional, for mode hdd mandatory
 		}
 	}
-	Clients map[string]string // optional
+	Property map[string]string // optional
 }
 
 func loadConfig(filename string, properties interface{}, configSearch bool) (int, error) {
