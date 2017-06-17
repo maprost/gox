@@ -13,8 +13,9 @@ import (
 
 type statCommand struct {
 	baseCommand
-	pull  bool
-	clean bool
+	pull   bool
+	clean  bool
+	travis bool
 }
 
 func StatCommand() args.SubCommand {
@@ -22,18 +23,19 @@ func StatCommand() args.SubCommand {
 }
 
 func (cmd *statCommand) Name() string {
-	return "stat"
+	return "tools"
 }
 
 func (cmd *statCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
 	fs.BoolVar(&cmd.pull, "pull", false, "Pull newest docker images for your project.")
 	fs.BoolVar(&cmd.clean, "clean", false, "Remove unused docker images.")
+	fs.BoolVar(&cmd.travis, "travis", false, "Creates a travis ci script of your project.")
 }
 
 func (cmd *statCommand) Run() {
 	cmd.baseCommand.init(false)
-	log.Info("Status of go project.")
+	log.Info("Toolkit for your go project.")
 	var err error
 
 	if cmd.clean {

@@ -2,7 +2,7 @@ package gxarg
 
 import "flag"
 
-const Cfg = "cfg"
+const Config = "config"
 
 func ConfigFile() *string {
 	return ConfigFileFlag(flag.CommandLine)
@@ -19,5 +19,5 @@ func ConfigFileFlag(fs *flag.FlagSet) *string {
 }
 
 func ConfigFileFlagVar(file *string, fs *flag.FlagSet) {
-	fs.StringVar(file, Cfg, "local.gx", "Path for config file.")
+	fs.StringVar(file, Config, "local.gx", "Path for config file.")
 }

@@ -1,4 +1,4 @@
-package docker
+package script
 
 import (
 	"github.com/maprost/gox/gxcfg"

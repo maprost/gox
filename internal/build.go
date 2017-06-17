@@ -15,6 +15,7 @@ import (
 type buildCommand struct {
 	baseCommand
 	godep          bool
+	shell          bool
 	compose        bool
 	checkStyleFail bool
 }
@@ -30,6 +31,7 @@ func (cmd *buildCommand) Name() string {
 func (cmd *buildCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
 	fs.BoolVar(&cmd.godep, "godep", false, "do 'godep [save|update] ./...' before compiling")
+	fs.BoolVar(&cmd.shell, "shell", false, "Creates a shell script of your project to run it (mostly for server).")
 	fs.BoolVar(&cmd.compose, "compose", false, "creates a docker compose yml file to run the docker image and all database docker container.")
 	fs.BoolVar(&cmd.checkStyleFail, "style", false, "if check style has a warning, the build failed.")
 }

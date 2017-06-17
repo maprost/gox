@@ -65,11 +65,11 @@ func TestInDocker(cfgFile string) error {
 		dock.Link(db.Docker.Container, db.Docker.Container)
 	}
 
-	// add command TODO add used cfg file
+	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
 		" && touch " + gxcfg.FileInsideDockerContainer +
 		" && chmod o+w " + gxcfg.FileInsideDockerContainer +
-		" && go test -cover ./... -args -" + gxarg.Cfg + "=" + cfgFile)
+		" && go test -cover ./... -args -" + gxarg.Config + "=" + cfgFile)
 
 	_, err = dock.Run(log.LevelInfo)
 	defer func() {
@@ -101,8 +101,8 @@ func BuildDockerImage(cfgFile string) error {
 		fileContent += "COPY " + v + " " + cfg.Docker.ProjectPath + "/" + v + "\n\n"
 	}
 
-	// add entry point TODO add used cfg file
-	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryGxName() + " -" + gxarg.Cfg + "=" + cfgFile + "\"]" + "\n"
+	// add entry point
+	fileContent += "ENTRYPOINT [\"" + cfg.Docker.ProjectPath + "/" + BinaryGxName() + " -" + gxarg.Config + "=" + cfgFile + "\"]" + "\n"
 	err = ioutil.WriteFile("DockerFile", []byte(fileContent), 0644)
 	if err != nil {
 		return err
@@ -110,10 +110,6 @@ func BuildDockerImage(cfgFile string) error {
 
 	_, err = shell.Stream(log.LevelInfo, "docker", "build", "-t", cfg.Docker.Container, "-f", "./DockerFile", ".")
 	return err
-}
-
-func CreateRunScript() error {
-	return nil
 }
 
 func RemoveDockerContainer() error {
