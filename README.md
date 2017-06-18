@@ -56,14 +56,14 @@ GoX is a go tool, to build and run your go server application in a docker contai
 ## Config
 ```go
 type config struct {
-	Port   string   // mandatory, port of server
+	Port   string   // mandatory, port of server (optional for test config)
 	Docker struct { // optional,
 		Container string   // optional, default: name of project
 		Image     string   // optional, default: golang:latest
 		Volume    []string // optional, public resource folder like: html, css, images...
 	}
 	Databases []struct { // optional,
-		Driver   string   // mandatory, 'postgres'
+		Driver   string   // mandatory, driver of your database ['postgres']
 		Dbname   string   // mandatory, name of the used database
 		User     string   // mandatory
 		Password string   // optional, default: ''

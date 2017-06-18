@@ -15,7 +15,7 @@ func InitLogger(level Level) {
 	log = logger{
 		level: level,
 	}
-	Info("Set log level to:", LevelToString[level])
+	Debug("Set log level to:", LevelToString[level])
 }
 
 func Debug(args ...interface{}) {

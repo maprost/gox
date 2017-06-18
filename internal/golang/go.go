@@ -42,7 +42,12 @@ func CompileBinary() (err error) {
 		return
 	}
 
-	_, err = shell.Stream(log.LevelInfo, "go", "build -o "+BinaryName())
+	_, err = shell.Command("go", "get", "-d")
+	if err != nil {
+		return
+	}
+
+	_, err = shell.Stream(log.LevelInfo, "go", "build", "-o", BinaryName())
 	return
 }
 
