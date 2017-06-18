@@ -73,7 +73,7 @@ func TestInDocker(cfgFile string, cfg *gxcfg.Config) error {
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
 		" && touch " + gxcfg.FileInsideDockerContainer +
 		" && chmod o+w " + gxcfg.FileInsideDockerContainer +
-		" && go test -cover ./... -args -" + gxarg.Config + "=" + cfgFile)
+		" && go test -cover $(go list ./... | grep -v vendor/) -args -" + gxarg.Config + "=" + cfgFile)
 
 	_, err = dock.Run(log.LevelInfo)
 	// delete FileInsideDockerContainer file
