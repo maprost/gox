@@ -24,13 +24,12 @@ func GoDep() error {
 	return err
 }
 
-func CheckStyle(checkStyleFail bool) error {
-	err := RemoveDockerContainer()
+func CheckStyle(checkStyleFail bool, cfg *gxcfg.Config) error {
+	err := RemoveDockerContainer(cfg)
 	if err != nil {
 		return err
 	}
 
-	cfg := gxcfg.GetConfig()
 	log.Info("Check style  project ", cfg.Name, " in docker container.")
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
@@ -49,7 +48,7 @@ func CheckStyle(checkStyleFail bool) error {
 		return err
 	}
 
-	err = RemoveDockerContainer()
+	err = RemoveDockerContainer(cfg)
 	if err != nil {
 		return err
 	}

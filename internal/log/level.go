@@ -8,8 +8,8 @@ const LevelWarn = Level(3)
 const LevelFatal = Level(4)
 
 const LevelDebugString = "debug"
-const LevelInfoString = "info"
-const LevelWarnString = "warn"
+const LevelInfoString = "info "
+const LevelWarnString = "warn "
 const LevelFatalString = "fatal"
 
 var LevelToString = map[Level]string{

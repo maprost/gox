@@ -61,7 +61,7 @@ type Config struct {
 var singleton *Config = nil
 
 func InitConfig(filename string, configSearch bool) error {
-	conf, err := createConfig(filename, configSearch)
+	conf, err := CreateConfig(filename, configSearch)
 	if err != nil {
 		return err
 	}

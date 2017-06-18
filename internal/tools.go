@@ -11,29 +11,29 @@ import (
 	"github.com/maprost/gox/internal/log"
 )
 
-type statCommand struct {
+type toolsCommand struct {
 	baseCommand
 	pull   bool
 	clean  bool
 	travis bool
 }
 
-func StatCommand() args.SubCommand {
-	return &statCommand{}
+func ToolsCommand() args.SubCommand {
+	return &toolsCommand{}
 }
 
-func (cmd *statCommand) Name() string {
+func (cmd *toolsCommand) Name() string {
 	return "tools"
 }
 
-func (cmd *statCommand) DefineFlags(fs *flag.FlagSet) {
+func (cmd *toolsCommand) DefineFlags(fs *flag.FlagSet) {
 	cmd.baseCommand.DefineFlags(fs)
 	fs.BoolVar(&cmd.pull, "pull", false, "Pull newest docker images for your project.")
 	fs.BoolVar(&cmd.clean, "clean", false, "Remove unused docker images.")
 	fs.BoolVar(&cmd.travis, "travis", false, "Creates a travis ci script of your project.")
 }
 
-func (cmd *statCommand) Run() {
+func (cmd *toolsCommand) Run() {
 	cmd.baseCommand.init(false)
 	log.Info("Toolkit for your go project.")
 	var err error

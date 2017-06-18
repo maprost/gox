@@ -37,7 +37,7 @@ func Stream(logLevel log.Level, cmdName string, cmdArgs ...string) (string, erro
 		for stdoutScanner.Scan() {
 			txt := stdoutScanner.Text()
 			out += txt
-			log.Print(logLevel, txt)
+			log.Stream(logLevel, txt)
 		}
 	}()
 

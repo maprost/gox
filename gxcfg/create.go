@@ -7,11 +7,16 @@ import (
 	"strings"
 )
 
-func createConfig(filename string, configSearch bool) (conf Config, err error) {
+func CreateConfig(filename string, configSearch bool) (conf Config, err error) {
 	var cfg config
 	_, err = loadConfig(filename, &cfg, configSearch)
 	if err != nil {
 		return
+	}
+
+	conf.ConfigProfile = filename
+	if index := strings.LastIndex(filename, "."); index > 0 {
+		conf.ConfigProfile = filename[:index]
 	}
 
 	// path config

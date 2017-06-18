@@ -1,21 +1,21 @@
 package golang
 
 import (
+	"io/ioutil"
+
 	"github.com/maprost/gox/gxarg"
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/docker"
 	"github.com/maprost/gox/internal/log"
 	"github.com/maprost/gox/internal/shell"
-	"io/ioutil"
 )
 
-func CompileInDocker() error {
-	err := RemoveDockerContainer()
+func CompileInDocker(cfg *gxcfg.Config) error {
+	err := RemoveDockerContainer(cfg)
 	if err != nil {
 		return err
 	}
 
-	cfg := gxcfg.GetConfig()
 	log.Info("Build project ", cfg.Name, " in docker container.")
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
 
@@ -33,7 +33,7 @@ func CompileInDocker() error {
 		return err
 	}
 
-	return RemoveDockerContainer()
+	return RemoveDockerContainer(cfg)
 }
 
 func CompileBinary() (err error) {
@@ -46,13 +46,12 @@ func CompileBinary() (err error) {
 	return
 }
 
-func TestInDocker(cfgFile string) error {
-	err := RemoveDockerContainer()
+func TestInDocker(cfgFile string, cfg *gxcfg.Config) error {
+	err := RemoveDockerContainer(cfg)
 	if err != nil {
 		return err
 	}
 
-	cfg := gxcfg.GetConfig()
 	log.Info("Test project ", cfg.Name, " in docker container.")
 
 	dock := docker.NewRunBuilder(cfg.Docker.Container, cfg.Docker.Image)
@@ -72,14 +71,14 @@ func TestInDocker(cfgFile string) error {
 		" && go test -cover ./... -args -" + gxarg.Config + "=" + cfgFile)
 
 	_, err = dock.Run(log.LevelInfo)
-	defer func() {
-		shell.Command("rm", gxcfg.FileInsideDockerContainer)
-	}()
+	// delete FileInsideDockerContainer file
+	defer shell.Command("rm", gxcfg.FileInsideDockerContainer)
+
 	if err != nil {
 		return err
 	}
 
-	return RemoveDockerContainer()
+	return RemoveDockerContainer(cfg)
 }
 
 func BuildDockerImage(cfgFile string) error {
@@ -112,8 +111,8 @@ func BuildDockerImage(cfgFile string) error {
 	return err
 }
 
-func RemoveDockerContainer() error {
-	return docker.StopAndRemove(gxcfg.GetConfig().Docker.Container)
+func RemoveDockerContainer(cfg *gxcfg.Config) error {
+	return docker.StopAndRemove(cfg.Docker.Container)
 }
 
 func PullDockerImage() error {

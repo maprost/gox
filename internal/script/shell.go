@@ -2,9 +2,10 @@ package script
 
 import (
 	"github.com/maprost/gox/gxcfg"
+	"io/ioutil"
 )
 
-func CreateShellScript() {
+func CreateShellScript() error {
 	var script string
 	cfg := gxcfg.GetConfig()
 
@@ -19,4 +20,12 @@ func CreateShellScript() {
 
 	// run docker container
 
+	var name string
+	name = "run_" + cfg.Name + "_" + cfg.ConfigProfile + ".sh"
+	err := ioutil.WriteFile(name, []byte(script), 0666)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

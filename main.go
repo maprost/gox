@@ -10,6 +10,6 @@ func main() {
 		internal.InitCommand(),
 		internal.BuildCommand(),
 		internal.BinRunCommand(),
-		internal.StatCommand(),
+		internal.ToolsCommand(),
 	)
 }

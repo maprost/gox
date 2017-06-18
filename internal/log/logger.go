@@ -35,8 +35,16 @@ func Fatal(args ...interface{}) {
 }
 
 func Print(logLevel Level, args ...interface{}) {
+	print(logLevel, append([]interface{}{"[", LevelToString[logLevel], "]"}, args...)...)
+}
+
+func Stream(logLevel Level, args ...interface{}) {
+	print(logLevel, append([]interface{}{"          "}, args...)...)
+}
+
+func print(logLevel Level, args ...interface{}) {
 	if log.level <= logLevel {
-		fmt.Println(append([]interface{}{"[", LevelToString[logLevel], "]"}, args...)...)
+		fmt.Println(args...)
 	}
 
 	if logLevel == LevelFatal {

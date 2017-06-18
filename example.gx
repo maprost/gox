@@ -22,7 +22,7 @@
       }
     }
   ],
-  "clients": {
+  "property": {
     "LogServer": "http://172.17.0.1:8091"
   }
 }

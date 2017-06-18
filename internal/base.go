@@ -37,7 +37,11 @@ func (cmd *baseCommand) init(configSearch bool) {
 }
 
 func startDatabases(hdd bool) error {
-	for _, dbConf := range gxcfg.GetConfig().Database {
+	return startDatabasesCfg(hdd, gxcfg.GetConfig())
+}
+
+func startDatabasesCfg(hdd bool, cfg *gxcfg.Config) error {
+	for _, dbConf := range cfg.Database {
 		dbx := db.New(dbConf)
 		err := dbx.Run(hdd)
 		if err != nil {

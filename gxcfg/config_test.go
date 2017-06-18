@@ -16,22 +16,25 @@ func TestProperties_checkStandardExample(t *testing.T) {
 
 	err := gxcfg.InitConfig("example.gx", true)
 	assert.Nil(err)
-	assert.NotNil(gxcfg.GetConfig())
+
+	cfg := gxcfg.GetConfig()
+	assert.NotNil(cfg)
 
 	// config
-	assert.Equal(gxcfg.GetConfig().Name, "gxcfg")
-	assert.Equal(gxcfg.GetConfig().Port, "8080")
-	assert.Equal(gxcfg.GetConfig().ProjectPath, "src/github.com/maprost/gox/gxcfg")
-	assert.Equal(gxcfg.GetConfig().FullProjectPath, "/home/maprost/go/src/github.com/maprost/gox/gxcfg")
-	assert.Equal(gxcfg.GetConfig().Docker.Image, "golang:latest")
-	assert.Equal(gxcfg.GetConfig().Docker.Container, "user-server")
-	assert.Equal(gxcfg.GetConfig().Clients, map[string]string{
+	assert.Equal(cfg.Name, "gxcfg")
+	assert.Equal(cfg.ConfigProfile, "example")
+	assert.Equal(cfg.Port, "8080")
+	assert.Equal(cfg.ProjectPath, "src/github.com/maprost/gox/gxcfg")
+	assert.Equal(cfg.FullProjectPath, "/home/maprost/go/src/github.com/maprost/gox/gxcfg")
+	assert.Equal(cfg.Docker.Image, "golang:latest")
+	assert.Equal(cfg.Docker.Container, "user-server")
+	assert.Equal(cfg.Property, map[string]string{
 		"LogServer": "http://172.17.0.1:8091",
 	})
 
 	// database
-	assert.Len(gxcfg.GetConfig().Database, 1)
-	db := gxcfg.GetConfig().Database[0]
+	assert.Len(cfg.Database, 1)
+	db := cfg.Database[0]
 	assert.Equal(db.Database(), "userdb")
 	assert.Equal(db.Driver(), "postgres")
 	assert.Equal(db.Host(), "127.0.0.1")
@@ -49,24 +52,27 @@ func TestProperties_checkMinimalExample(t *testing.T) {
 	// fix path
 	os.Args[0] = "/home/maprost/go/src/github.com/maprost/gox/gxcfg/config_test.go"
 
-	err := gxcfg.InitConfig("minimal.gx", true)
+	err := gxcfg.InitConfig("minimal", true)
 	assert.Nil(err)
-	assert.NotNil(gxcfg.GetConfig())
+
+	cfg := gxcfg.GetConfig()
+	assert.NotNil(cfg)
 
 	// config
-	assert.Equal(gxcfg.GetConfig().Name, "gxcfg")
-	assert.Equal(gxcfg.GetConfig().Port, "8080")
-	assert.Equal(gxcfg.GetConfig().ProjectPath, "src/github.com/maprost/gox/gxcfg")
-	assert.Equal(gxcfg.GetConfig().FullProjectPath, "/home/maprost/go/src/github.com/maprost/gox/gxcfg")
-	assert.Equal(gxcfg.GetConfig().Docker.Image, "golang:latest")
-	assert.Equal(gxcfg.GetConfig().Docker.Container, "gxcfg")
-	assert.Equal(gxcfg.GetConfig().Clients, map[string]string{
+	assert.Equal(cfg.Name, "gxcfg")
+	assert.Equal(cfg.ConfigProfile, "minimal")
+	assert.Equal(cfg.Port, "8080")
+	assert.Equal(cfg.ProjectPath, "src/github.com/maprost/gox/gxcfg")
+	assert.Equal(cfg.FullProjectPath, "/home/maprost/go/src/github.com/maprost/gox/gxcfg")
+	assert.Equal(cfg.Docker.Image, "golang:latest")
+	assert.Equal(cfg.Docker.Container, "gxcfg")
+	assert.Equal(cfg.Property, map[string]string{
 		"LogServer": "http://172.17.0.1:8091",
 	})
 
 	// database
-	assert.Len(gxcfg.GetConfig().Database, 1)
-	db := gxcfg.GetConfig().Database[0]
+	assert.Len(cfg.Database, 1)
+	db := cfg.Database[0]
 	assert.Equal(db.Database(), "userdb")
 	assert.Equal(db.Driver(), "postgres")
 	assert.Equal(db.Host(), "localhost")
