@@ -1,13 +1,14 @@
 package gxcfg
 
 type Database struct {
-	driver   string
-	dbname   string
-	user     string
-	password string
-	host     string
-	port     string
-	Docker   struct {
+	driver    string
+	dbname    string
+	user      string
+	password  string
+	host      string
+	port      string
+	UseDocker bool
+	Docker    struct {
 		Image     string
 		Container string
 		DiscSpace string

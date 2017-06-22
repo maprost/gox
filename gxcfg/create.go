@@ -84,7 +84,8 @@ func CreateConfig(filename string, configSearch bool) (conf Config, err error) {
 		}
 
 		// set docker config
-		if db.Docker != nil {
+		entry.UseDocker = db.Docker != nil
+		if entry.UseDocker {
 			entry.Docker.Image = db.Docker.Image
 			if entry.Docker.Image == "" {
 				entry.Docker.Image = entry.driver + ":latest"

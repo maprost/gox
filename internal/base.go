@@ -47,11 +47,16 @@ func startDatabases(hdd bool) error {
 
 func startDatabasesCfg(hdd bool, cfg *gxcfg.Config) error {
 	for _, dbConf := range cfg.Database {
-		dbx := db.New(dbConf)
-		err := dbx.Run(hdd)
-		if err != nil {
-			return err
+
+		// run only docker based databases
+		if dbConf.UseDocker {
+			dbx := db.New(dbConf)
+			err := dbx.Run(hdd)
+			if err != nil {
+				return err
+			}
 		}
+
 	}
 	return nil
 }
