@@ -35,18 +35,21 @@ func CreateConfig(filename string, configSearch bool) (conf Config, err error) {
 	conf.Property = cfg.Property
 
 	// server docker config
-	conf.Docker.Image = cfg.Docker.Image
-	if conf.Docker.Image == "" {
-		conf.Docker.Image = golangImage
-	}
+	conf.UseDocker = cfg.Docker != nil
+	if conf.UseDocker {
+		conf.Docker.Image = cfg.Docker.Image
+		if conf.Docker.Image == "" {
+			conf.Docker.Image = golangImage
+		}
 
-	conf.Docker.Container = cfg.Docker.Container
-	if conf.Docker.Container == "" {
-		conf.Docker.Container = conf.Name
-	}
+		conf.Docker.Container = cfg.Docker.Container
+		if conf.Docker.Container == "" {
+			conf.Docker.Container = conf.Name
+		}
 
-	conf.Docker.Volumes = cfg.Docker.Volume
-	conf.Docker.ProjectPath = "/go/" + conf.ProjectPath
+		conf.Docker.Volumes = cfg.Docker.Volume
+		conf.Docker.ProjectPath = "/go/" + conf.ProjectPath
+	}
 
 	// build database list
 	insideDockerContainer := checkFileInsideDockerContainer(configSearch)

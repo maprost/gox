@@ -45,6 +45,7 @@ type Config struct {
 	FullProjectPath string // -> /home/maprost/golang/src/github.com/maprost/gox
 	ProjectPath     string // -> src/github.com/maprost/gox
 	Database        []Database
+	UseDocker       bool
 	Docker          struct {
 		Image     string
 		Container string

@@ -35,7 +35,12 @@ func (cmd *binRunCommand) Run() {
 	log.Info("Compile go project.")
 	var err error
 
-	err = golang.CompileBinary()
+	cfg := gxcfg.GetConfig()
+
+	err = golang.GoGet()
+	checkFatal(err, "Can't get every dependency: ")
+
+	err = golang.CompileBinary(cfg, binaryName)
 	checkFatal(err, "Can't compile: ")
 
 	if cmd.fast == false {
@@ -44,7 +49,6 @@ func (cmd *binRunCommand) Run() {
 	}
 
 	// run (TODO: database access + profile)
-	cfg := gxcfg.GetConfig()
 	_, err = shell.Stream(log.LevelInfo, "./"+cfg.Name)
 	checkFatalAndDeleteBinary(err, "Can't run tests: ")
 
@@ -52,7 +56,7 @@ func (cmd *binRunCommand) Run() {
 
 func checkFatalAndDeleteBinary(err error, msg string) {
 	if err != nil {
-		shell.Command("rm", golang.BinaryName())
+		shell.Command("rm", binaryName)
 		log.Fatal(msg, err.Error())
 	}
 }

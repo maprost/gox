@@ -26,12 +26,17 @@ GoX is a go tool, to build and run your go server application in a docker contai
 1. build docker image
 1. build a shell script for the server, if activated (`-shell`)
 1. build a docker compose script for the server, if activated (`-compose`)
+- additional commands:
+    - `-config`: set the config, the project need in the docker image
+    - `-testconfig`: set the config for the build container and testing
 
 ### `gox binrun`
 - this mode exists mostly for local testing
 1. build a binary of your project
 1. init all dependencies, if not deactivated (`-fast`)
 1. run the binary
+- additional commands:
+    - `-config`: set the config, the project need in the docker image
 
 ### `gox tools`
 - see all states of your docker container/images
@@ -57,7 +62,7 @@ GoX is a go tool, to build and run your go server application in a docker contai
 ```go
 type config struct {
 	Port   string   // mandatory, port of server (optional for test config)
-	Docker struct { // optional,
+	Docker struct { // optional, if not set -> don't use a docker container (be careful -> paths depend on build system)
 		Container string   // optional, default: name of project
 		Image     string   // optional, default: golang:latest
 		Volume    []string // optional, public resource folder like: html, css, images...

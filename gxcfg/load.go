@@ -6,8 +6,8 @@ import (
 )
 
 type config struct {
-	Port   string   // mandatory, port of server
-	Docker struct { // optional,
+	Port   string    // mandatory, port of server
+	Docker *struct { // optional, if not set -> don't use a docker container (be careful -> paths depend on build system)
 		Container string   // optional, default: name of project
 		Image     string   // optional, default: golang:latest
 		Volume    []string // optional, public resource folder like: html, css, images...

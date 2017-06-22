@@ -5,6 +5,7 @@ import (
 
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/args"
+	"github.com/maprost/gox/internal/docker"
 	"github.com/maprost/gox/internal/golang"
 	"github.com/maprost/gox/internal/log"
 	"github.com/maprost/gox/internal/script"
@@ -52,6 +53,11 @@ func (cmd *buildCommand) Run() {
 	testCfg, err := gxcfg.CreateConfig(cmd.testConfig, false)
 	checkFatal(err, "Can't load config ("+cmd.testConfig+") to test your project: ")
 
+	// set binaryName
+	if testCfg.UseDocker {
+		binaryName = binaryName + "_gx"
+	}
+
 	if cmd.godep {
 		// run godep
 		err = golang.GoDep()
@@ -62,7 +68,7 @@ func (cmd *buildCommand) Run() {
 	checkFatal(err, "")
 
 	// build (golang build)
-	err = golang.CompileInDocker(&testCfg)
+	err = golang.Compile(&testCfg, binaryName)
 	checkFatal(err, "Can't compile: ")
 
 	// start databases for testing
@@ -70,11 +76,11 @@ func (cmd *buildCommand) Run() {
 	checkFatalAndDeleteGxBinary(err, "Can't run databases: ")
 
 	// test (golang test)
-	err = golang.TestInDocker(cmd.testConfig, &testCfg)
+	err = golang.Test(cmd.testConfig, &testCfg)
 	checkFatalAndDeleteGxBinary(err, "Can't run tests: ")
 
 	// build docker images
-	err = golang.BuildDockerImage(cmd.baseCommand.file.File)
+	err = docker.BuildDockerImage(cmd.baseCommand.file.File, binaryName)
 	checkFatalAndDeleteGxBinary(err, "Can't build docker image: ")
 
 	if cmd.shell {
@@ -90,12 +96,12 @@ func (cmd *buildCommand) Run() {
 	}
 
 	// delete binary
-	shell.Command("rm", golang.BinaryGxName())
+	shell.Command("rm", binaryName)
 }
 
 func checkFatalAndDeleteGxBinary(err error, msg string) {
 	if err != nil {
-		shell.Command("rm", golang.BinaryGxName())
+		shell.Command("rm", binaryName)
 		log.Fatal(msg, err.Error())
 	}
 }

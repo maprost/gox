@@ -10,6 +10,8 @@ import (
 	"github.com/maprost/gox/internal/shell"
 )
 
+var binaryName string
+
 type baseCommand struct {
 	log  args.DebugFlag
 	file args.FileFlag
@@ -34,6 +36,9 @@ func (cmd *baseCommand) init(configSearch bool) {
 	// load config file
 	err = gxcfg.InitConfig(cmd.file.File, configSearch)
 	checkFatal(err, "Can't init config: ")
+
+	cfg := gxcfg.GetConfig()
+	binaryName = cfg.Name
 }
 
 func startDatabases(hdd bool) error {
