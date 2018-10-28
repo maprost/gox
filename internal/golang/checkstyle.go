@@ -2,6 +2,7 @@ package golang
 
 import (
 	"errors"
+
 	"github.com/maprost/gox/gxcfg"
 	"github.com/maprost/gox/internal/docker"
 	"github.com/maprost/gox/internal/log"
@@ -30,7 +31,7 @@ func checkStyleInDocker(checkStyleFail bool, cfg *gxcfg.Config) (err error) {
 
 	// add command
 	dock.Execute("cd " + cfg.Docker.ProjectPath +
-		" && echo 'golint' && go get -u github.com/golang/lint/golint && golint $(go list ./... | grep -v /vendor/)" +
+		" && echo 'golint' && go get -u golang.org/x/lint/golint && golint $(go list ./... | grep -v /vendor/)" +
 		" && echo 'go vet' && go vet $(go list ./... | grep -v /vendor/)" +
 		" && echo 'gocyclo over 10' && go get github.com/fzipp/gocyclo && gocyclo -over 10 . | grep -v vendor/")
 
@@ -58,7 +59,7 @@ func checkStylePlain(checkStyleFail bool, cfg *gxcfg.Config) (err error) {
 
 	// golint
 	log.Info("golint")
-	shell.Stream(log.LevelDebug, "go", "get", "-u", "github.com/golang/lint/golint")
+	shell.Stream(log.LevelDebug, "go", "get", "-u", "golang.org/x/lint/golint")
 	out, err = shell.Stream(log.LevelInfo, "bash", "-c", "golint $(go list ./... | grep -v /vendor/)")
 
 	if err != nil {
